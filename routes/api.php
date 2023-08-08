@@ -14,6 +14,17 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+
+Route::prefix('v1')->group(function () {
+
+
+    // Declare unauthenticated routes
+    Route::group(['middleware' => 'guest'], function () {
+        Route::any('/', function () {
+            return response()->json(['message' => 'Welcome to Kulture Api'], 200);
+        })->name('welcome');
+    });
+
+
+    // Declare authenticated routes
 });

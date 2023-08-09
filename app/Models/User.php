@@ -47,4 +47,19 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    /**
+     * Get the producer associated with the user.
+     */
+    public function producer()
+    {
+        return $this->hasOne(Producer::class);
+    }
+
+    
+
+    public function artist()
+    {
+        return $this->hasOne(Artist::class);
+    }
 }

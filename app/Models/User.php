@@ -3,14 +3,17 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+
+use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
+use Laravel\Passport\HasApiTokens;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable, HasUlids;
 
     /**
      * The attributes that are mass assignable.
@@ -21,6 +24,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'confirm_password',
+        'user_type',
     ];
 
     /**
@@ -30,6 +35,7 @@ class User extends Authenticatable
      */
     protected $hidden = [
         'password',
+        'confirm_password',
         'remember_token',
     ];
 
@@ -42,4 +48,21 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    /**
+     * Get the producer associated with the user.
+     * 
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne<\App\Models\Producer>
+     */
+    public function producer(): HasOne
+    {
+        return $this->hasOne(Producer::class);
+    }
+
+
+
+    // public function artist(): HasOne
+    // {
+    //     return $this->hasOne(Artist::class);
+    // }
 }

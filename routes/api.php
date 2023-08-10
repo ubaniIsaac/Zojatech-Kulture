@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
+use App\Http\Controllers\api\{AuthController};
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -20,11 +21,17 @@ Route::prefix('v1')->group(function () {
 
     // Declare unauthenticated routes
     Route::group(['middleware' => 'guest'], function () {
+
+        //Heartbeat route
         Route::any('/', function () {
             return response()->json(['message' => 'Welcome to Kulture Api'], 200);
         })->name('welcome');
+
+        Route::post('/register', [AuthController::class, 'register'])->name('register');
+        Route::post('/login', [AuthController::class, 'login'])->name('login');
     });
 
 
     // Declare authenticated routes
+    
 });

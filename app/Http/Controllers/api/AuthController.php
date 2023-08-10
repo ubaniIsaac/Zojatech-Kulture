@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers\api;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Http\Resources\UserResources;
 use Illuminate\Http\JsonResponse;
-use App\Http\Requests\SignUpRequest;
 use App\Models\{User, Producer, };
+use App\Http\Requests\LoginRequest;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\SignUpRequest;
+use Illuminate\Support\Facades\Hash;
+use App\Http\Resources\UserResources;
 
 class AuthController extends Controller
 {
@@ -21,7 +23,7 @@ class AuthController extends Controller
 
         if ($data['user_type'] === 'producer') {
          $user  =  Producer::create(['user_id' => $user->id]);
-        }
+        } 
 
         return response()->json(
             [
@@ -30,5 +32,25 @@ class AuthController extends Controller
             ],
             201
         );
+    }
+    
+    public function login(LoginRequest $request): JsonResponse
+    {
+
+        $user = User::where('email', $request->email)->first();
+
+        if (!$user || !Hash::check($request->password, $user->password)) {
+            return response()->json([
+                'message' => 'Invalid credentials',
+            ], 200);
+        }
+
+        $token = $user->createToken("$user->name token")->accessToken;
+
+        return response()->json([
+            'message' => 'Login successfully',
+            'data' => $user,
+            'token' => $token
+        ]);
     }
 }

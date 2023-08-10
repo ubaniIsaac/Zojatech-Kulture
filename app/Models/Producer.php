@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\{BelongsTo, HasMany};
 
 class Producer extends User
 {
@@ -25,16 +26,23 @@ class Producer extends User
 
     /**
      * Get the user that owns the producer.
+     * 
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\User, \App\Models\Producer>
      */
 
-    public function user()
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
-    public function beats()
-    {
-        return $this->hasMany(Beat::class);
-    }
+    // /**
+    //  * Get the beats for the producer.
+    //  * 
+    //  * @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\Beat, \App\Models\Producer>
+    //  */
+    // public function beats(): HasMany
+    // {
+    //     return $this->hasMany(Beat::class);
+    // }
 
 }

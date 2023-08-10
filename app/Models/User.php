@@ -6,6 +6,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -50,16 +51,18 @@ class User extends Authenticatable
 
     /**
      * Get the producer associated with the user.
+     * 
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne<\App\Models\Producer>
      */
-    public function producer()
+    public function producer(): HasOne
     {
         return $this->hasOne(Producer::class);
     }
 
-    
 
-    public function artist()
-    {
-        return $this->hasOne(Artist::class);
-    }
+
+    // public function artist(): HasOne
+    // {
+    //     return $this->hasOne(Artist::class);
+    // }
 }

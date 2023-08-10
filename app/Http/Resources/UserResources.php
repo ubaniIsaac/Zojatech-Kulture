@@ -5,7 +5,8 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-use function PHPSTORM_META\type;
+/**
+ * @mixin \App\Models\User */
 
 class UserResources extends JsonResource
 {

@@ -9,6 +9,7 @@ use App\Models\{User, Producer, };
 use App\Http\Requests\LoginRequest;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\SignUpRequest;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Resources\UserResources;
 
@@ -32,7 +33,6 @@ class AuthController extends Controller
 
         }
         
-
         return response()->json(
             [
                 'message' => 'User created successfully',
@@ -42,7 +42,7 @@ class AuthController extends Controller
         );
     }
     
-    public function login(LoginRequest $request): JsonResponse
+    public function signin(LoginRequest $request): JsonResponse
     {
 
         $user = User::where('email', $request->email)->first();
@@ -56,9 +56,19 @@ class AuthController extends Controller
         $token = $user->createToken("$user->name token")->accessToken;
 
         return response()->json([
-            'message' => 'Login successfully',
+            'message' => 'User logged in successfully',
             'data' => $user,
             'token' => $token
         ]);
+    }
+
+    public function signout(Request $request)
+    {
+        Auth::logout();
+
+        return response()->json([
+            'message' => 'Logged out successfully'
+        ]);
+        
     }
 }

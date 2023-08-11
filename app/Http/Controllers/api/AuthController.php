@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\api;
 
+use App\Models\Artiste;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use App\Models\{User, Producer, };
@@ -22,8 +23,15 @@ class AuthController extends Controller
         $user = User::create($data);
 
         if ($data['user_type'] === 'producer') {
-         $user  =  Producer::create(['user_id' => $user->id]);
-        } 
+            $producer  =  Producer::create(['user_id' => $user->id]);
+            $producer->assignRole('producer');
+
+        } elseif ($data['user_type'] === 'artiste') {
+            $artiste  =  Artiste::create(['user_id' => $user->id]);
+            $artiste->assignRole('artiste');
+
+        }
+        
 
         return response()->json(
             [

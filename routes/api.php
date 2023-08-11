@@ -34,4 +34,4 @@ Route::prefix('v1')->group(function () {
 
     // Declare authenticated routes
     
-});
+}); 

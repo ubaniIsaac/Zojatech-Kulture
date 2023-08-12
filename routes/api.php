@@ -28,10 +28,11 @@ Route::prefix('v1')->group(function () {
         })->name('welcome');
 
         Route::post('/register', [AuthController::class, 'register'])->name('register');
-        Route::post('/login', [AuthController::class, 'login'])->name('login');
+        Route::post('/signin', [AuthController::class, 'signin'])->name('signin');
+        Route::post('/signout', [AuthController::class, 'signout'])->name('signout');
     });
 
 
     // Declare authenticated routes
     
-});
+}); 

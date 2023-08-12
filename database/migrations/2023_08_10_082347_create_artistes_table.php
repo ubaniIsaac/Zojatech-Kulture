@@ -11,10 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('artists', function (Blueprint $table) {
+        Schema::create('artistes', function (Blueprint $table) {
             $table->ulid('id');
             $table->ulid('user_id')->primary()->uniqid();
-            $table->integer('beats_purshased')->default('0');
+            $table->integer('beats_purchased')->default('0');
             $table->integer('profile_views')->default('0');       
             $table->timestamps();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');

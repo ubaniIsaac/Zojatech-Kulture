@@ -24,19 +24,24 @@ class AuthController extends Controller
         $user = User::create($data);
 
         if ($data['user_type'] === 'producer') {
-            $producer  =  Producer::create(['user_id' => $user->id]);
-            $producer->assignRole('producer');
+            $user->assignRole('producer');
+            $user->producers()->create(['user_id' => $user->id]);
 
         } elseif ($data['user_type'] === 'artiste') {
-            $artiste  =  Artiste::create(['user_id' => $user->id]);
-            $artiste->assignRole('artiste');
+            $user->assignRole('artiste');
+            $user->artistes()->create(['user_id' => $user->id]);
 
+        }
+
+        if ($request->hasFile('profile_picture')) 
+        {
+            $user->addMediaFromRequest('profile_picture')->toMediaCollection('avatars');
         }
         
         return response()->json(
             [
                 'message' => 'User created successfully',
-                'data' => $user
+                'data' => new UserResources($user)
             ],
             201
         );
@@ -57,7 +62,7 @@ class AuthController extends Controller
 
         return response()->json([
             'message' => 'User logged in successfully',
-            'data' => $user,
+            'data' => new UserResources($user),
             'token' => $token
         ]);
     }

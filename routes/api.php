@@ -1,8 +1,9 @@
 <?php
 
 use Illuminate\Http\Request;
-use App\Http\Controllers\api\{AuthController};
 use Illuminate\Support\Facades\Route;
+use App\Http\Middleware\CheckOwnership;
+use App\Http\Controllers\api\{AuthController, UserController};
 
 /*
 |--------------------------------------------------------------------------
@@ -34,5 +35,21 @@ Route::prefix('v1')->group(function () {
 
 
     // Declare authenticated routes
-    
+
+        Route::group(['middleware' => ['auth:api']], function() {
+
+            Route::group(['prefix' => 'users'],  static function () {
+
+                Route::group(['middleware' => [CheckOwnership::class]], static function () {
+                    Route::put('/{id}', [UserController::class, 'update'])->name('user-update-self');
+                    Route::delete('/{id}', [UserController::class, 'destroy'])->name('users-delete-self');
+                });
+
+                Route::get('/', [UserController::class, 'index'])->name('get-users');
+                Route::get('/{id}', [UserController::class, 'show'])->name('show-user');
+                Route::get('producers', [UserController::class, 'getProducers'])->name('get-producers');
+                Route::get('artistes', [UserController::class, 'getArtistes'])->name('get-artistes');
+        });
+    });
+
 }); 

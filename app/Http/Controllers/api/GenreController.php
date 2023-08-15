@@ -15,10 +15,7 @@ class GenreController extends Controller
     public function index()
     {
        $genres = Genre::all();
-         return response()->json([
-            'message' => 'Genres retrieved successfully',
-            'data' => GenreResources::collection($genres)
-         ]);
+         return $this->okResponse('Genres retrieved successfully', GenreResources::collection($genres));
     }
 
     public function show($id)
@@ -38,10 +35,7 @@ class GenreController extends Controller
             
             $Genre = Genre::create($request->validated());
 
-            return response()->json([
-                'message' => "Genre Created successfully",
-                'data' => new GenreResources($Genre)
-            ], 201);
+            return $this->okResponse('Genre created successfully', new GenreResources($Genre));
         } catch (\Throwable $th) {
 
             return $this->errorResponse('Genre not created');
@@ -53,10 +47,7 @@ class GenreController extends Controller
        try {
             $genre = Genre::findOrFail($id);
             $genre->update($request->all());
-            return response()->json([
-                'message' => "Genre updated successfully",
-                'data' => new GenreResources($genre)
-            ], 200);
+            return $this->okResponse('Genre updated successfully', new GenreResources($genre));
        } catch (\Throwable $th) {
             return $this->errorResponse('Genre not updated');
        }
@@ -68,10 +59,7 @@ class GenreController extends Controller
         try {
             $genre = Genre::findOrFail($id);
             $genre->delete();
-            return response()->json([
-                'message' => "Genre deleted successfully",
-                'data' => new GenreResources($genre)
-            ], 200);
+            return $this->okResponse('Genre deleted successfully', new GenreResources($genre));
         } catch (\Throwable $th) {
             return $this->errorResponse('Genre not deleted');
         }

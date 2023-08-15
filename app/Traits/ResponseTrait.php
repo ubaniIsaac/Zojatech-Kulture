@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\Http\Traits;
+namespace App\Traits;
 
 
 use Exception;
@@ -28,6 +28,11 @@ trait ResponseTrait
         return $this->successResponse($message, $data, 200);
     }
 
+
+    public function errorResponse(string $message, $data = null): JsonResponse
+    {
+        return $this->successResponse($message, $data, 400);
+    }
 
     /**
      * Return a successful created HTTP response

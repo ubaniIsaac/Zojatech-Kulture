@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\api;
 
 use App\Models\Artiste;
+use App\Traits\ResponseTrait;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use App\Models\{User, Producer, };
@@ -16,7 +17,7 @@ use App\Http\Resources\UserResources;
 class AuthController extends Controller
 {
     //
-
+    use ResponseTrait;
     public function register(SignUpRequest $request): JsonResponse
     {
         $data = $request->validated();
@@ -33,13 +34,9 @@ class AuthController extends Controller
 
         }
         
-        return response()->json(
-            [
-                'message' => 'User created successfully',
-                'data' => $user
-            ],
-            201
-        );
+        return $this->successResponse('User created successfully', [
+            'user' => new UserResources($user)
+        ]);
     }
     
     public function signin(LoginRequest $request): JsonResponse
@@ -48,17 +45,14 @@ class AuthController extends Controller
         $user = User::where('email', $request->email)->first();
 
         if (!$user || !Hash::check($request->password, $user->password)) {
-            return response()->json([
-                'message' => 'Invalid credentials',
-            ], 200);
+            return $this->errorResponse('Invalid credentials', 401);
         }
 
         $token = $user->createToken("$user->name token")->accessToken;
 
-        return response()->json([
-            'message' => 'User logged in successfully',
-            'data' => $user,
-            'token' => $token
+        return $this->successResponse('User logged in successfully', [
+            'token' => $token,
+            'user' => new UserResources($user)
         ]);
     }
 
@@ -66,9 +60,7 @@ class AuthController extends Controller
     {
         Auth::logout();
 
-        return response()->json([
-            'message' => 'Logged out successfully'
-        ]);
+        return $this->successResponse('User logged out successfully');
         
     }
 }

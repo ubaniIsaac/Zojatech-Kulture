@@ -16,9 +16,8 @@ class Genre extends Model
     /**
      * Get the beats associated with the genre.
      * 
-     * @return \\Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\Beat>
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\Beat>
      */
-
      public function beats(): HasMany
      {
          return $this->hasMany(Beat::class);

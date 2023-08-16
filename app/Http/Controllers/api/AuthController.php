@@ -20,9 +20,16 @@ class AuthController extends Controller
     use ResponseTrait;
     public function register(SignUpRequest $request): JsonResponse
     {
-        $data = $request->validated();
+        $data = $request->all();
 
-        $user = User::create($data);
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'profile_image' => $request->profile_image,
+            'user_type' => $request->user_type,
+            'password' => $request->password,
+            'confirm_password' => $request->confirm_password,
+        ]);
 
         if ($data['user_type'] === 'producer') {
             $producer  =  Producer::create(['user_id' => $user->id]);
@@ -56,7 +63,7 @@ class AuthController extends Controller
         ]);
     }
 
-    public function signout(Request $request)
+    public function signout(Request $request): JsonResponse
     {
         Auth::logout();
 

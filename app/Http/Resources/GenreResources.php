@@ -6,8 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 /**
- *  @mixins \App\Models\Genre
- */
+ *  @mixin \App\Models\Genre */
 
 class GenreResources extends JsonResource
 {

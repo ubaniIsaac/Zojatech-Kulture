@@ -10,8 +10,10 @@ use App\Http\Resources\BeatResources;
 use App\Traits\ResponseTrait;
 use Illuminate\Http\JsonResponse;
 use App\Services\MediaService;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 use App\Http\Requests\{UploadBeatRequest};
+use GuzzleHttp\Psr7\Stream;
 
 class BeatController extends Controller
 {
@@ -132,4 +134,39 @@ class BeatController extends Controller
             return $this->errorResponse('Trending beats not found');
         }
     }
+
+    public function download(string $id): StreamedResponse
+    {
+        try {
+            $beat = Beat::find($id);
+    
+            if (!$beat) {
+                return $this->errorResponse('Beat not found');
+            }
+    
+            $downloadInfo = MediaService::downloadAsset($beat->fileUrl);
+            
+        
+            // Prepare the response for download
+            $filename = $downloadInfo['filename'];
+            $contentType = $downloadInfo['content-type'];
+            $fileContent = $downloadInfo['content'];
+    
+            $headers = [
+                'Content-Type' => $contentType,
+                'Content-Disposition' => 'attachment; filename="' . $filename . '"',
+            ];
+    
+            //update beat download count
+            $beat->increment('download_count'); 
+
+            return response()->stream(function () use ($fileContent) {
+                echo $fileContent;
+            }, 200, $headers);
+
+        } catch (\Throwable $th) {
+            return $this->errorResponse($th->getMessage());
+        }
+    }
+    
 }

@@ -39,7 +39,7 @@ Route::prefix('v1')->group(function () {
 
         Route::get('/beats/{id}', [BeatController::class, 'show'])->name('beats.show');
 
-          Route::get('/', [BeatController::class, 'index'])->name('beats.index');
+        Route::get('/beats', [BeatController::class, 'index'])->name('beats.index');
     });
 
 
@@ -60,7 +60,7 @@ Route::prefix('v1')->group(function () {
 
 
         Route::prefix('beats')->middleware(['role:producer'])->group(function () {
-          
+
             Route::post('/upload', [BeatController::class, 'upload'])->name('beats.upload');
 
             Route::group(['middleware' => 'isOwner'], function () {
@@ -73,7 +73,11 @@ Route::prefix('v1')->group(function () {
         Route::prefix('trending')->group(function () {
 
             Route::get('/beats', [BeatController::class, 'trending'])->name('beats.trending');
+        });
 
+        Route::prefix('downloads')->group(function () {
+
+            Route::get('/beats/{id}', [BeatController::class, 'download'])->name('beats.download');
         });
     });
 });

@@ -21,7 +21,9 @@ class GenreResources extends JsonResource
             'id' => $this->id,
             'attributes' => [
                 'name' => $this->name,
-            ]
+            ],
+
+            'beats' => $this->beats,
         ];
     }
 }

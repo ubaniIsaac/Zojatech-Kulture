@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('producers', function (Blueprint $table) {
-            $table->ulid('id');
-            $table->ulid('user_id')->primary()->uniqid();
+            $table->ulid('id')->primary()->uniqid();
+            $table->ulid('user_id');
             $table->integer('total_revenue')->default('0');
             $table->integer('total_sales')->default('0');
             $table->integer('total_beats')->default('0');

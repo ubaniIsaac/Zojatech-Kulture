@@ -35,14 +35,14 @@ class Producer extends User
         return $this->belongsTo(User::class);
     }
 
-    // /**
-    //  * Get the beats for the producer.
-    //  * 
-    //  * @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\Beat, \App\Models\Producer>
-    //  */
-    // public function beats(): HasMany
-    // {
-    //     return $this->hasMany(Beat::class);
-    // }
+    /**
+     * Get the beats for the producer.
+     * 
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\Beat>
+     */
+    public function beats(): HasMany
+    {
+        return $this->hasMany(Beat::class);
+    }
 
 }

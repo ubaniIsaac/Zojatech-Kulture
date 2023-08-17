@@ -69,5 +69,11 @@ Route::prefix('v1')->group(function () {
                 Route::delete('/{id}', [BeatController::class, 'destroy'])->name('beats.delete');
             });
         });
+
+        Route::prefix('trending')->group(function () {
+
+            Route::get('/beats', [BeatController::class, 'trending'])->name('beats.trending');
+
+        });
     });
 });

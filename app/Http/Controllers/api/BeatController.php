@@ -122,4 +122,14 @@ class BeatController extends Controller
             return $this->errorResponse('Beat not deleted');
         }
     }
+
+    public function trending(): JsonResponse
+    {
+        try {
+            $beats = Beat::orderBy('view_count', 'desc')->take(10)->get();
+            return $this->successResponse('Trending beats retrieved successfully', BeatResources::collection($beats));
+        } catch (\Throwable $th) {
+            return $this->errorResponse('Trending beats not found');
+        }
+    }
 }

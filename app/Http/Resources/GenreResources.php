@@ -6,8 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 /**
- *  @mixins \App\Models\Genre
- */
+ *  @mixin \App\Models\Genre */
 
 class GenreResources extends JsonResource
 {
@@ -22,7 +21,9 @@ class GenreResources extends JsonResource
             'id' => $this->id,
             'attributes' => [
                 'name' => $this->name,
-            ]
+            ],
+
+            'beats' => $this->beats,
         ];
     }
 }

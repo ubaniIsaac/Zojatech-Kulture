@@ -7,61 +7,65 @@ use App\Http\Requests\CreateGenreRequest;
 use App\Http\Resources\GenreResources;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 
 class GenreController extends Controller
 {
     //
     use ResponseTrait;
-    public function index()
+    public function index(): JsonResponse
     {
        $genres = Genre::all();
-         return $this->okResponse('Genres retrieved successfully', GenreResources::collection($genres));
+         return $this->successResponse('Genres retrieved successfully', GenreResources::collection($genres));
     }
 
-    public function show($id)
+    public function show(string $id):  JsonResponse
     {
         try {
             $genre = Genre::findOrFail($id);
-            return $this->okResponse('Genre retrieved successfully', new GenreResources($genre));
+            return $this->successResponse('Genre retrieved successfully', new GenreResources($genre));
 
         } catch (\Throwable $th) {
-            return $this->errorResponse('Genre not retrieved');
+            return $this->okResponse($th->getMessage());
         }
     }
 
-    public function store(CreateGenreRequest $request)
+    public function store(CreateGenreRequest $request): JsonResponse
     {
         try {
             
-            $Genre = Genre::create($request->validated());
+            $Genre = Genre::create([
+                'name' => $request->name,
 
-            return $this->okResponse('Genre created successfully', new GenreResources($Genre));
+            ]);
+
+            return $this->successResponse('Genre created successfully', new GenreResources($Genre), 201);
         } catch (\Throwable $th) {
 
-            return $this->errorResponse('Genre not created');
+            return $this->okResponse('Genre not created');
         }
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request,string $id): JsonResponse
     {
        try {
             $genre = Genre::findOrFail($id);
             $genre->update($request->all());
-            return $this->okResponse('Genre updated successfully', new GenreResources($genre));
+            return $this->successResponse('Genre updated successfully', new GenreResources($genre));
        } catch (\Throwable $th) {
-            return $this->errorResponse('Genre not updated');
+            return $this->okResponse('Genre not updated');
        }
     }
 
 
-    public function destroy($id)
+    public function destroy(string $id): JsonResponse
     {
         try {
             $genre = Genre::findOrFail($id);
             $genre->delete();
-            return $this->okResponse('Genre deleted successfully', new GenreResources($genre));
+            return $this->successResponse('Genre deleted successfully', new GenreResources($genre));
         } catch (\Throwable $th) {
-            return $this->errorResponse('Genre not deleted');
+            return $this->okResponse('Genre not deleted');
         }
     }
 }

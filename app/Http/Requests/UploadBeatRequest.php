@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class LoginRequest extends FormRequest
+class UploadBeatRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -14,7 +14,7 @@ class LoginRequest extends FormRequest
         return true;
     }
 
-     /**
+    /**
      * Get the validation rules that apply to the request.
      * 
      * @return array<string>
@@ -22,8 +22,13 @@ class LoginRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email' => 'required|string',
-            'password' => 'required|string'
+            //
+            'name' => 'required|string',
+            'audio' => 'required|mimes:mpga,wav,mp3,octet-stream',
+            'price' => 'required|numeric',
+            'genre' => 'required|exists:genres,name',
+            'image' => 'required|file|mimes:jpeg,png,jpg,gif,svg|max:2048',
+           
         ];
     }
 }

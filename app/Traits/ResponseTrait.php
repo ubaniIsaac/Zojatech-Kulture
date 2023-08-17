@@ -29,7 +29,7 @@ trait ResponseTrait
     }
 
 
-    public function errorResponse(string $message, $data = null): JsonResponse
+    public function errorResponse(string $message, mixed $data = null): JsonResponse
     {
         return $this->successResponse($message, $data, 400);
     }
@@ -42,7 +42,7 @@ trait ResponseTrait
      *
      * @return JsonResponse
      */
-    public function createdResponse(string $message, $data = null): JsonResponse
+    public function createdResponse(string $message, mixed $data = null): JsonResponse
     {
         return $this->successResponse($message, $data, 201);
     }
@@ -66,7 +66,7 @@ trait ResponseTrait
      *
      * @return JsonResponse
      */
-    public function successResponse(string $message, $data = null, int $status = 200): JsonResponse
+    public function successResponse(string $message, mixed $data = null, int $status = 200): JsonResponse
     {
 
         return $this->jsonResponse($message, $status, $data);
@@ -102,11 +102,11 @@ trait ResponseTrait
      * Return a bad request HTTP error response
      *
      * @param string $message
-     * @param array|null $error
+     * @param null $error
      *
      * @return JsonResponse
      */
-    public function badRequestResponse(string $message, array $error = null): JsonResponse
+    public function badRequestResponse(string $message, $error = null): JsonResponse
     {
         return $this->clientErrorResponse($message, 400, $error);
     }
@@ -115,11 +115,11 @@ trait ResponseTrait
      * Return a forbidden HTTP error response
      *
      * @param string $message
-     * @param array|null $error
+     * @param null $error
      *
      * @return JsonResponse
      */
-    public function forbiddenResponse(string $message, array $error = null): JsonResponse
+    public function forbiddenResponse(string $message, $error = null): JsonResponse
     {
         return $this->clientErrorResponse($message, 403, $error);
     }
@@ -179,7 +179,7 @@ trait ResponseTrait
      *
      * @param string $message
      * @param int $status
-     * @param null $data
+     * @param mixed|null $data
      * @return JsonResponse
      */
     public function jsonResponse(string $message, int $status, $data = null): JsonResponse
@@ -203,7 +203,6 @@ trait ResponseTrait
      * Determine if a  HTTP status code indicates success
      *
      * @param int $status
-     *
      * @return bool
      */
     public function isStatusCodeSuccessful(int $status): bool
@@ -211,12 +210,26 @@ trait ResponseTrait
         return $status >= 200 && $status < 300;
     }
 
+    /**
+     * Return a generic HTTP response
+     *
+     * @param string $message
+     * @param int $status
+     * @return JsonResponse
+     */
+
     public function authResponse($message, $status): JsonResponse
     {
         return $this->jsonResponse($message, $status);
     }
 
-    public function tooManyRequests($message, $status = 429): JsonResponse
+    /**
+     * Return a too many requests HTTP error response
+     * @param string $message
+     * @param int $status
+     */
+
+    public function tooManyRequests(string $message, int $status = 429): JsonResponse
     {
         return $this->jsonResponse($message, $status);
     }

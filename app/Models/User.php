@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Support\Arr;
 
 class User extends Authenticatable
 {
@@ -62,12 +63,18 @@ class User extends Authenticatable
         return $this->hasOne(Producer::class);
     }
 
+    /**
+     * Get the artiste associated with the user.
+     * 
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne<\App\Models\Artiste>
+     */
+
     public function artiste(): HasOne
     {
         return $this->hasOne(Artiste::class);
     }
 
-    public function guardName()
+    public function guardName(): mixed
     {
         return 'api';
     }

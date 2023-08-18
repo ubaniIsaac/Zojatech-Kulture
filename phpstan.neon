@@ -13,7 +13,8 @@ parameters:
 #        - '#PHPDoc tag @var#'
 #
 #    excludePaths:
-#        - ./*/*/FileToBeExcluded.php
+#        - ./*/*/FileToBeExcluded.php#  
+#        - ./app/Traits/ResponseTrait.php   
 #
 #    checkMissingIterableValueType: false
 #    checkGenericClassInNonGenericObjectType: false

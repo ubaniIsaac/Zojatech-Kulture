@@ -28,7 +28,7 @@ class Artiste extends User
     /**
      * Get the user that owns the producer.
      * 
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\User, \App\Models\Producer>
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\User, \App\Models\Artiste>
      */
 
     public function user(): BelongsTo

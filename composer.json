@@ -6,6 +6,8 @@
     "license": "MIT",
     "require": {
         "php": "^8.1",
+        "cloudinary-labs/cloudinary-laravel": "^2.0",
+        "cloudinary/cloudinary_php": "^2",
         "guzzlehttp/guzzle": "^7.2",
         "laravel/framework": "^10.10",
         "laravel/passport": "^11.8",
@@ -33,10 +35,12 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Tests\\": "tests/"
+            "Tests\\": "tests/",
+            "App\\Traits\\": "app/Traits/"
         }
     },
     "scripts": {
+        "analyse" : "vendor/bin/phpstan analyse --memory-limit=2G",
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
             "@php artisan package:discover --ansi"
@@ -51,6 +55,7 @@
             "@php artisan key:generate --ansi"
         ]
     },
+    
     "extra": {
         "laravel": {
             "dont-discover": []

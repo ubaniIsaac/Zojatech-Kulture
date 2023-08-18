@@ -16,6 +16,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Support\Arr;
 
 class User extends Authenticatable implements HasMedia
 {
@@ -69,12 +70,12 @@ class User extends Authenticatable implements HasMedia
         return $this->hasOne(Producer::class);
     }
 
-    public function artistes(): HasOne
+    public function artiste(): HasOne
     {
         return $this->hasOne(Artiste::class);
     }
 
-    public function guardName()
+    public function guardName(): mixed
     {
         return 'api';
     }

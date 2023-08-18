@@ -26,7 +26,7 @@ class GenreController extends Controller
             return $this->successResponse('Genre retrieved successfully', new GenreResources($genre));
 
         } catch (\Throwable $th) {
-            return $this->okResponse('Genre not retrieved');
+            return $this->okResponse($th->getMessage());
         }
     }
 

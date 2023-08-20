@@ -70,7 +70,7 @@ class User extends Authenticatable implements HasMedia
         return $this->hasOne(Producer::class);
     }
 
-    public function artiste(): HasOne
+    public function artistes(): HasOne
     {
         return $this->hasOne(Artiste::class);
     }
@@ -80,9 +80,9 @@ class User extends Authenticatable implements HasMedia
         return 'api';
     }
     
-    public function profile_picture(): Attribute
-    {
-        return Attribute::make(get: fn () => $this->getFirstMedia('profile_picture') ?: null);
-    }
+    // public function profile_picture(): Attribute
+    // {
+    //     return Attribute::make(get: fn () => $this->getFirstMedia('profile_picture') ?: null);
+    // }
 
 }

@@ -5,45 +5,42 @@ namespace App\Http\Controllers\Api;
 use App\Models\User;
 use App\Models\Producer;
 use Illuminate\Http\Request;
+use App\Services\MediaService;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\ResponseTrait;
 use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResources;
+use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 
 class UserController extends Controller
 {
-    public function index(Request $request)
+    use ResponseTrait;
+
+    public function index(Request $request): JsonResponse
      {
-        // $perPage = $request->query('per_page', 10);
-
-        // $users = U   ser::paginate($perPage);
-
         $users = User::latest()->paginate(10)->through(fn ($user) => new UserResources($user));
 
-        return response()->json([
-            'message' => 'Users listed successfully',
+        return $this->successResponse('Users listed successfully', [
             'data' => $users
         ]);
     } 
 
-    public function show(string $id)
+    public function show(string $id): JsonREsponse
     {
         try {
             $user = User::findOrFail($id);
 
             // dd($user);
 
-            return response()->json([
-                'message' => 'User retrieved succcessfully',
+            return $this->successResponse('User retrieved succcessfully', [
                 'data' => new UserResources($user)
-            ], 200);
+            ]);
 
         } catch (\Throwable $th) {
 
-            return response()->json([
-                'message' => 'user not found',
-            ], 404);
+            return $this->errorResponse('user not found', 404);
         }
     }
 
@@ -53,22 +50,36 @@ class UserController extends Controller
             //code...
             $user = User::findOrFail($user);
 
-            $user->update($request->except('profile_picture'));
+            $data = $request->except('profile_picture');
+            $user->update($data);
+
+            // dd($user);
 
             if ($request->hasFile('profile_picture')) {
-                $user->clearMediaCollection('avatars');
-                $user->addMediaFromRequest('profile_picture')->toMediaCollection('avatars');
-                $user->save();
+                if ($user->profile_picture) {
+                    Cloudinary::destroy($user->profile_picture);
+                }
+                $imageUrl = MediaService::uploadImage($request->file('profile_picture'), 'profileImages');
+                // $profile_picture = cloudinary()->upload($request->file('profile_picture')->getRealPath())->getSecurePath();
             };
-            return response()->json([
-                'Message' => 'User updated successfully',
-                'data' => new UserResources($user),
-            ], 200);
+
+            $user->update([
+                'profile_picture' => $imageUrl, // Update the Cloudinary URL
+            ]);
+
+            // $user->update(array_merge($request->all(),['profile_picture' => $imageUrl]));
+            dd($user);
+
+    
+            // dd($user);
+            return $this->successResponse('User updated successfully', [
+                'data' => new UserResources($user)
+            ]);
         } catch (\Throwable $th) {
             //throw $th;
+            // return $this->errorResponse('User not found', 404);
             return response()->json([
-                'Message' => 'User not found',
-
+                'message' => "user was not found ",
             ], 404);
         }
     }
@@ -93,25 +104,15 @@ class UserController extends Controller
     }
 
 
-    public function getProducers() 
-    {
+//     public function getProducers() 
+//     {
         
-        $user = User::with('producers')->whereHas("roles", function($q){ $q->where('name', 'producer'); })->get();
+//         $user = User::with('producers')->whereHas("roles", function($q){ $q->where('name', 'producer'); })->get();
 
-        return response()->json([
-            'message' => 'producers listed successfully',
-            'data' => $user
-        ], 200);
-    }
+//         return response()->json([
+//             'message' => 'producers listed successfully',
+//             'data' => $user
+//         ], 200);
+//     }
 
-    public function getArtistes() 
-    {
-        
-        $user = User::with('artistes')->whereHas('roles', function($q){ $q->where('name', 'artiste'); })->get();
-
-        return response()->json([
-            'message' => 'artistes listed successfully',
-            'data' => new UserResources($user)
-        ], 200);
-    }
 }

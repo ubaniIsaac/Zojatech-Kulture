@@ -1,8 +1,9 @@
 <?php
 
 use Illuminate\Http\Request;
-use App\Http\Controllers\api\{AuthController, BeatController, GenreController};
+use App\Http\Controllers\api\{AuthController, BeatController, GenreController, UserController};
 use Illuminate\Support\Facades\Route;
+use App\Http\Middleware\CheckOwnership;
 
 /*
 |--------------------------------------------------------------------------
@@ -40,6 +41,9 @@ Route::prefix('v1')->group(function () {
         Route::get('/beats/{id}', [BeatController::class, 'show'])->name('beats.show');
 
         Route::get('/beats', [BeatController::class, 'index'])->name('beats.index');
+
+        Route::delete('users/{id}', [UserController::class, 'destroy'])->name('users-delete-self');
+        Route::put('users/{id}', [UserController::class, 'update'])->name('user-update-self');
     });
 
 
@@ -56,6 +60,17 @@ Route::prefix('v1')->group(function () {
                 Route::post('/update', [GenreController::class, 'update'])->name('genre.update');
                 Route::post('/delete', [GenreController::class, 'delete'])->name('genre.delete');
             });
+        });
+
+        Route::group(['prefix' => 'users'],  static function () {
+
+            Route::group(['middleware' => 'isOwner'], function () {
+                // Route::put('/{id}', [UserController::class, 'update'])->name('user-update-self');
+                // Route::delete('/{id}', [UserController::class, 'destroy'])->name('users-delete-self');
+            });
+
+            Route::get('/', [UserController::class, 'index'])->name('get-users');
+            Route::get('/{id}', [UserController::class, 'show'])->name('show-user');
         });
 
 
@@ -76,6 +91,7 @@ Route::prefix('v1')->group(function () {
         });
 
         Route::prefix('downloads')->group(function () {
+    
 
             Route::get('/beats/{id}', [BeatController::class, 'download'])->name('beats.download');
         });

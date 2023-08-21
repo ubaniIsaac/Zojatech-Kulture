@@ -29,7 +29,7 @@ Request Body:
 
 Response Body:
 
-```
+```json
 {
     "status": true,
     "message": "User created successfully",

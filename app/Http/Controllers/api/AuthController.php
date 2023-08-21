@@ -30,7 +30,7 @@ class AuthController extends Controller
         $user = User::create(array_merge(
             $request->validated(),
             [
-                'username' => '@' . $request->username,
+                'username' =>  $request->username,
                 'first_name' => $request->first_name,
                 'last_name' => $request->last_name,
                 'email' => $request->email,
@@ -61,7 +61,7 @@ class AuthController extends Controller
             return $this->errorResponse('Invalid credentials', 401);
         }
 
-        $token = $user->createToken("$user->username token")->accessToken;
+        $token = $user->createToken($user->email, [$user->user_type])->accessToken;
 
         return $this->successResponse('User logged in successfully', [
             'token' => $token,

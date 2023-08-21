@@ -47,6 +47,12 @@ Route::prefix('v1')->group(function () {
         Route::get('/producers', [ProducerController::class, 'index'])->name('producers.index');
 
         Route::post('/producers/{id}', [ProducerController::class, 'show'])->name('producers.show');
+
+        Route::prefix('trending')->group(function () {
+            Route::get('/beats', [BeatController::class, 'trending'])->name('beats.trending');
+            Route::get('/producers', [ProducerController::class, 'trendingProducers'])->name('producers.trending');
+            Route::get('/genres', [GenreController::class, 'trending'])->name('genres.trending');
+        });
     });
 
 
@@ -55,7 +61,7 @@ Route::prefix('v1')->group(function () {
     Route::group(['middleware' => 'auth:api'], static function () {
 
         //Admin routes
-        Route::prefix('admin')->group(function () {
+        Route::prefix('admin')->middleware(['role:admin'])->group(function () {
 
             //Admin- Genre routes
             Route::prefix('genre')->group(function () {
@@ -87,11 +93,6 @@ Route::prefix('v1')->group(function () {
             });
         });
 
-        Route::prefix('trending')->group(function () {
-            Route::get('/beats', [BeatController::class, 'trending'])->name('beats.trending');
-            Route::get('/producers', [ProducerController::class, 'trendingProducers'])->name('producers.trending');
-            Route::get('/genres', [GenreController::class, 'trending'])->name('genres.trending');
-        });
 
         Route::prefix('downloads')->group(function () {
             Route::get('/beats/{id}', [BeatController::class, 'download'])->name('beats.download');

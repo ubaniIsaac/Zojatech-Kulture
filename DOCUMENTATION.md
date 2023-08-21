@@ -6,7 +6,7 @@ Welcome to the documentation for the Kulture App API. This document provides inf
 
 Before using the API, you need to authenticate. Here are the authentication routes:
 
-### Register
+### REGISTER
 
 Endpoint: `POST /api/v1/register`
 
@@ -52,7 +52,7 @@ Response Body:
 }
 ```
 
-### Login
+### LOGIN
 
 Endpoint: `POST /api/v1/signin`
 
@@ -66,7 +66,7 @@ Request Body:
 ```
 Response Body
 
-```
+```json
 {
     "status": true,
     "message": "User logged in successfully",

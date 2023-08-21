@@ -77,7 +77,7 @@ Route::prefix('v1')->group(function () {
             Route::get('/', [UserController::class, 'index'])->name('get-users');
 
 
-            Route::group(['middleware' => 'isOwner'], function () {
+            Route::group(['middleware' => 'isOwner:user'], function () {
                 Route::put('/{id}', [UserController::class, 'update'])->name('user-update-self');
                 Route::delete('/{id}', [UserController::class, 'destroy'])->name('users-delete-self');
             });
@@ -87,7 +87,7 @@ Route::prefix('v1')->group(function () {
         Route::prefix('beats')->middleware(['role:producer'])->group(function () {
             Route::post('/upload', [BeatController::class, 'upload'])->name('beats.upload');
 
-            Route::group(['middleware' => 'isOwner'], function () {
+            Route::group(['middleware' => 'isOwner:beat'], function () {
                 Route::put('/{id}', [BeatController::class, 'update'])->name('beats.update');
                 Route::delete('/{id}', [BeatController::class, 'destroy'])->name('beats.delete');
             });

@@ -52,7 +52,7 @@ class ProducerController extends Controller
     public function trendingProducers(): JsonResponse
     {
         try {
-            $producers = Producer::with('user')->orderBy('total_beats', 'desc')->limit(10)->get();
+            $producers = Producer::with('user')->orderBy('profile_views', 'desc')->limit(10)->get();
 
             return $this->successResponse('Trending producers retrieved successfully', [
                 'data' => $producers

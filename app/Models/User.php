@@ -7,10 +7,7 @@ namespace App\Models;
 use App\Models\Artiste;
 use Spatie\MediaLibrary\HasMedia;
 use Laravel\Passport\HasApiTokens;
-use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Notifications\Notifiable;
-use Spatie\MediaLibrary\InteractsWithMedia;
-use Spatie\Permission\Traits\HasPermissions;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
@@ -18,9 +15,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Support\Arr;
 
-class User extends Authenticatable implements HasMedia
+class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable, HasUlids, HasRoles, HasPermissions, InteractsWithMedia;
+    use HasApiTokens, HasFactory, Notifiable, HasUlids;
 
     /**
      * The attributes that are mass assignable.

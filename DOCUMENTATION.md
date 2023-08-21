@@ -71,7 +71,7 @@ Response Body
     "status": true,
     "message": "User logged in successfully",
     "data": {
-        "token": token,
+        "token": "token",
         "user": {
             "id": "01h8cbbpmnxent1cys6wbtrc6y",
             "type": "users",

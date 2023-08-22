@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('confirm_password');
             $table->string('user_type');
             $table->string('profile_picture')->nullable();
+            $table->string('recipient_code')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

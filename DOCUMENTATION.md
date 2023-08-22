@@ -76,7 +76,7 @@ Response Body
             "id": "01h8cbbpmnxent1cys6wbtrc6y",
             "type": "users",
             "attributes": {
-                "username": "@adeyinka",
+                "username": "@okeeey",
                 "first_name": "Felipe",
                 "last_name": "Alysson",
                 "email": "abisoye@gmail.com",

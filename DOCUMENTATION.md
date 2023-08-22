@@ -88,3 +88,47 @@ Response Body
         }
     }
 }
+```
+### TRENDING
+
+Endpoint: `GET /api/v1/trending/beats`
+
+Response Body:
+
+```json
+{
+    "status": true,
+    "message": "Trending beats retrieved successfully",
+    "data": [
+        {
+            "id": "01h8em8rgtf8r0dt9s8wg13fdx",
+            "attributes": {
+                "name": "haptic",
+                "price": 582,
+                "genre": "Afro Pop",
+                "image_url": "https://res.cloudinary.com/dvn1eznus/image/upload/v1692708124/beatsImages/htgyamojwfpe3xevpoxo.jpg",
+                "file_url": "https://res.cloudinary.com/dvn1eznus/video/upload/v1692708134/beatsAudios/norrmwqnbb8h1zieypag.mp3",
+                "duration": "00:51",
+                "size": 1635056,
+                "type": "audio/mpeg",
+                "user_id": "01h8e8nycg52axpj85ty4jcrr1",
+                "total_sales": 0,
+                "plays": 0,
+                "views": 0,
+                "likes": 0,
+                "downloads": 0
+            },
+            "producer": {
+                "id": "01h8e8nz80gapv1ck2ts0zysr7",
+                "user_id": "01h8e8nycg52axpj85ty4jcrr1",
+                "total_revenue": 0,
+                "total_sales": 0,
+                "total_beats": 22,
+                "profile_views": 9,
+                "total_beats_sold": 0,
+                "created_at": "2023-08-22T09:19:45.000000Z",
+                "updated_at": "2023-08-22T14:04:10.000000Z"
+            }
+        }
+    ]
+}

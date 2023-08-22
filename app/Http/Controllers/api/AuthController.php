@@ -61,6 +61,8 @@ class AuthController extends Controller
             return $this->errorResponse('Invalid credentials', 401);
         }
 
+        $token = $user->generateToken();
+
         $token = $user->createToken($user->email, [$user->user_type])->accessToken;
 
         return $this->successResponse('User logged in successfully', [

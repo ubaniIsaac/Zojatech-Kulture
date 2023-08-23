@@ -5,8 +5,10 @@ namespace App\Http\Controllers\api;
 use App\Http\Requests\PaymentRequest;
 use App\Http\Controllers\Controller;
 use App\Models\Payment;
+use App\Models\Producer;
 use App\Models\User;
 use App\Services\PaymentService;
+use App\Traits\ResponseTrait;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -14,6 +16,8 @@ use Illuminate\Support\Arr;
 
 class PaymentController extends Controller
 {
+    use ResponseTrait;
+
     //
     public PaymentService $paymentService;
     public function __construct()
@@ -93,7 +97,8 @@ class PaymentController extends Controller
     public function createRecipient(Request $request): JsonResponse
     {
 
-        $user = auth()->user();
+        $user = User::findorfail(auth()->user()->id);
+
         $ref = uniqid();
         $data = [
             'name' => $request['name'],
@@ -114,19 +119,25 @@ class PaymentController extends Controller
 
     public function initiateWithdrawal(Request $request): JsonResponse
     {
-        $user = auth()->user();
-        $ref = uniqid();
+        $user = User::findorfail(auth()->user()->id);
+        $producer = Producer::where('user_id', $user->id)->first();
+
+        if( $producer->total_revenue < $request['amount']){
+                return $this->errorResponse('Insufficient balance');
+        }
 
         $data = [
             'recipient'=> $user->recipient_code,
             'amount' => $request['amount']
         ];
 
-        $result = $this->paymentService->initiateWithdrawal($data);
-        dd($result);
-        return response()->json([
-            "message" => "Withdrawal initiated successfully",
-            'status' => 200
-        ]);
+        $result = mock($this->paymentService->initiateWithdrawal($data));
+
+        if($result){
+            $producer->total_revenue -= $request['amount'];
+            $producer->save();
+            // dd($producer);
+        }
+        return $this->successResponse('Withdrawal initiated successfully', $producer);
     }
 }

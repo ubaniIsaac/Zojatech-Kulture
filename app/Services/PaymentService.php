@@ -58,7 +58,7 @@ class PaymentService
 
         $response = $this->hitPaystack('POST', $url, $fields);
 
-        dd($response);
+        // dd($response);
         return $response;
     }
 

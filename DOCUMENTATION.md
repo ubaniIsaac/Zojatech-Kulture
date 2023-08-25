@@ -132,3 +132,43 @@ Response Body:
         }
     ]
 }
+```
+
+
+Endpoint: `GET /api/v1/trending/producers`
+
+Response Body:
+
+```json
+
+{
+    "status": true,
+    "message": "Trending producers retrieved successfully",
+    "data": {
+        "data": [
+            {
+                "id": "01h875k9xznv3qzt5pbzte4h2k",
+                "user_id": "01h875k9wyqa89jwxfa9w9b3az",
+                "total_revenue": 0,
+                "total_sales": 0,
+                "total_beats": 0,
+                "profile_views": 0,
+                "total_beats_sold": 0,
+                "created_at": "2023-08-19T15:11:11.000000Z",
+                "updated_at": "2023-08-19T15:11:11.000000Z",
+                "user": {
+                    "id": "01h875k9wyqa89jwxfa9w9b3az",
+                    "username": "@Ryan",
+                    "first_name": "Armstrong",
+                    "last_name": "Anjali",
+                    "email": "lucas@gmail.com",
+                    "user_type": "producer",
+                    "profile_picture": "C:\\xampp\\tmp\\php1C4E.tmp",
+                    "created_at": "2023-08-19T15:11:11.000000Z",
+                    "updated_at": "2023-08-19T15:11:11.000000Z"
+                }
+            }
+        ]
+    }
+}
+```

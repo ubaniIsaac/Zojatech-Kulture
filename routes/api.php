@@ -69,7 +69,7 @@ Route::prefix('v1')->group(function () {
 
 
         //Admin routes
-        Route::prefix('admin')->middleware(['role:admin'])->group(function () {
+        Route::prefix('admin')->group(function () {
 
             //Admin- Genre routes
             Route::prefix('genre')->group(function () {

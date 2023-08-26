@@ -61,10 +61,13 @@ Route::prefix('v1')->group(function () {
     Route::group(['middleware' => 'auth:api'], static function () {
 
         //payment routes
-        Route::post('/pay', [PaymentController::class, 'makePayment']);
-        Route::post('/verifyPayment', [PaymentController::class, 'store']);
-        Route::post('/createRecipient', [PaymentController::class, 'createRecipient']);
-        Route::post('/withdraw', [PaymentController::class, 'initiateWithdrawal']);
+        Route::prefix('payment')->group(function () {
+
+            Route::post('/pay', [PaymentController::class, 'makePayment']);
+            Route::post('/verifyPayment', [PaymentController::class, 'store']);
+            Route::post('/createRecipient', [PaymentController::class, 'createRecipient']);
+            Route::post('/withdraw', [PaymentController::class, 'initiateWithdrawal']);
+        });
 
 
 

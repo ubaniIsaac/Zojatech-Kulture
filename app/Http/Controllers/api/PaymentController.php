@@ -122,18 +122,18 @@ class PaymentController extends Controller
         $user = User::findorfail(auth()->user()->id);
         $producer = Producer::where('user_id', $user->id)->first();
 
-        if( $producer->total_revenue < $request['amount']){
-                return $this->errorResponse('Insufficient balance');
+        if ($producer->total_revenue < $request['amount']) {
+            return $this->errorResponse('Insufficient balance');
         }
 
         $data = [
-            'recipient'=> $user->recipient_code,
+            'recipient' => $user->recipient_code,
             'amount' => $request['amount']
         ];
 
-        $result = mock($this->paymentService->initiateWithdrawal($data));
+        $result = "withrawal"; //mock($this->paymentService->initiateWithdrawal($data));
 
-        if($result){
+        if ($result) {
             $producer->total_revenue -= $request['amount'];
             $producer->save();
             // dd($producer);

@@ -69,13 +69,10 @@ class PaymentController extends Controller
                 $payment->status = 'successful'; // @phpstan-ignore-line
                 $payment?->save();
 
-                $ticket_data = collect($payment)->except('id')->toArray();
-
-
 
 
                 return response()->json([
-                    "message" => "Payment Successful. Ticket booked",
+                    "message" => "Payment Successful",
                     "data" =>  'test',
                     'status' => 200
                 ]);

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\api;
 
 use App\Models\Artiste;
 use App\Events\{SignUpEvent, ProducerEvent, PasswordResetEvent, UserPurchaseEvent};
+use App\Models\Cart;
 use Illuminate\Http\Request;
 use App\Traits\ResponseTrait;
 use App\Services\MediaService;
@@ -46,6 +47,7 @@ class AuthController extends Controller
             $user->producers()->create(['user_id' => $user->id]);
         } elseif ($data['user_type'] === 'artiste') {
             $user->artistes()->create(['user_id' => $user->id]);
+            Cart::create(['user_id' => $user->id]);
         }
 
         new SignUpEvent($user);

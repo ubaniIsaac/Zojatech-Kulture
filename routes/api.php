@@ -59,6 +59,11 @@ Route::prefix('v1')->group(function () {
 
     // Declare authenticated routes
     Route::group(['middleware' => 'auth:api'], static function () {
+        Route::prefix('carts')->middleware(['role:artiste'])->group(function(){
+            Route::post('/add/{beat_id}',[Cartcontroller::class, 'add'])->name('add-beat-to-cart');
+            Route::get('/view',[Cartcontroller::class, 'view'])->name('view-all-beats-in-cart');
+            Route::delete('/{beat_id}', [Cartcontroller::class, 'destroy'])->name('delet-from-cart');
+        });
 
         //Admin routes
         Route::prefix('admin')->group(function () {
@@ -91,12 +96,6 @@ Route::prefix('v1')->group(function () {
                 Route::put('/{id}', [BeatController::class, 'update'])->name('beats.update');
                 Route::delete('/{id}', [BeatController::class, 'destroy'])->name('beats.delete');
             });
-        });
-
-        Route::prefix('carts')->middleware(['role:artiste'])->group(function(){
-            Route::post('/add/{beat_id}',[Cartcontroller::class, 'add'])->name('add-beat-to-cart');
-            Route::get('/view',[Cartcontroller::class, 'view'])->name('view-all-beats-in-cart');
-            Route::delete('/{beat_id}', [Cartcontroller::class, 'delete'])->name('delet-from-cart');
         });
 
 

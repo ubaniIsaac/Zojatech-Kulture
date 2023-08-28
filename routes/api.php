@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
-use App\Http\Controllers\api\{AuthController, BeatController, GenreController, UserController, ProducerController};
+use App\Http\Controllers\api\{AuthController, BeatController, GenreController, UserController, ProducerController, Cartcontroller};
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\CheckOwnership;
 
@@ -91,6 +91,12 @@ Route::prefix('v1')->group(function () {
                 Route::put('/{id}', [BeatController::class, 'update'])->name('beats.update');
                 Route::delete('/{id}', [BeatController::class, 'destroy'])->name('beats.delete');
             });
+        });
+
+        Route::prefix('carts')->middleware(['role:artiste'])->group(function(){
+            Route::post('/add/{beat_id}',[Cartcontroller::class, 'add'])->name('add-beat-to-cart');
+            Route::get('/view',[Cartcontroller::class, 'view'])->name('view-all-beats-in-cart');
+            Route::delete('/{beat_id}', [Cartcontroller::class, 'delete'])->name('delet-from-cart');
         });
 
 

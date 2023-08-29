@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
-use App\Http\Controllers\api\{AuthController, BeatController, GenreController, UserController, ProducerController, Cartcontroller};
+use App\Http\Controllers\api\{AuthController, BeatController, GenreController, UserController, ProducerController};
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\CheckOwnership;
 
@@ -64,6 +64,14 @@ Route::prefix('v1')->group(function () {
             Route::get('/view',[Cartcontroller::class, 'view'])->name('view-all-beats-in-cart');
             Route::delete('/{beat_id}', [Cartcontroller::class, 'destroy'])->name('delet-from-cart');
         });
+
+        //payment routes
+        Route::post('/pay', [PaymentController::class, 'makePayment']);
+        Route::post('/verifyPayment', [PaymentController::class, 'store']);
+        Route::post('/createRecipient', [PaymentController::class, 'createRecipient']);
+        Route::post('/withdraw', [PaymentController::class, 'initiateWithdrawal']);
+
+
 
         //Admin routes
         Route::prefix('admin')->group(function () {

@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 use App\Traits\ResponseTrait;
 use App\Services\MediaService;
 use Illuminate\Http\JsonResponse;
-use App\Models\{User, Producer, };
+use App\Models\{User, Producer,};
 use App\Http\Requests\LoginRequest;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\SignUpRequest;
@@ -51,12 +51,12 @@ class AuthController extends Controller
         }
 
         new SignUpEvent($user);
-       
+
         return $this->successResponse('User created successfully', [
             'user' => new UserResources($user)
         ]);
     }
-    
+
     public function signin(LoginRequest $request): JsonResponse
     {
 
@@ -81,6 +81,5 @@ class AuthController extends Controller
         Auth::logout();
 
         return $this->successResponse('User logged out successfully');
-        
     }
 }

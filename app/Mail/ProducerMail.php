@@ -2,6 +2,8 @@
 
 namespace App\Mail;
 
+use App\Models\Producer;
+use App\Models\Beat;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -16,7 +18,7 @@ class ProducerMail extends Mailable
     /**
      * Create a new message instance.
      */
-    public function __construct()
+    public function __construct(public Producer $producer, public Beat $beat)
     {
         //
     }
@@ -27,7 +29,8 @@ class ProducerMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Producer Mail',
+            subject: 'An Artiste just purchased your beat!',
+            from: 'zojakulture.com',
         );
     }
 
@@ -37,7 +40,7 @@ class ProducerMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'view.name',
+            view: 'emails.ProducerNotif',
         );
     }
 

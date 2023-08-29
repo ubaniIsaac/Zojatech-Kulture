@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Events;
-use App\Models\User;
+use App\Models\Artiste;
 use App\Models\Beat;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
@@ -18,7 +18,7 @@ class UserPurchaseEvent
     /**
      * Create a new event instance.
      */
-    public function __construct(public User $user,
+    public function __construct(public Artiste $artiste,
     public Beat $beat)
     {
         //

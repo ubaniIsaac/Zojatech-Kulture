@@ -2,6 +2,8 @@
 
 namespace App\Events;
 
+use App\Models\Producer;
+use App\Models\Beat;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PresenceChannel;
@@ -17,7 +19,8 @@ class ProducerEvent
     /**
      * Create a new event instance.
      */
-    public function __construct()
+    public function __construct(public Producer $producer,
+    public Beat $beat)
     {
         //
     }

@@ -2,6 +2,8 @@
 
 namespace App\Mail;
 
+use App\Models\Artiste;
+use App\Models\Beat;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -16,7 +18,7 @@ class UserPurchaseMail extends Mailable
     /**
      * Create a new message instance.
      */
-    public function __construct()
+    public function __construct(public Artiste $artiste, public Beat $beat)
     {
         //
     }
@@ -27,7 +29,8 @@ class UserPurchaseMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'User Purchase Mail',
+            subject: 'You have successfully purchased a beat',
+            from: 'zojakulture.com'
         );
     }
 
@@ -37,7 +40,7 @@ class UserPurchaseMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'view.name',
+            view: 'emails.UserPurchaseNotif',
         );
     }
 

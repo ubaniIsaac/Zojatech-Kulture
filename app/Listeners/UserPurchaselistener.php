@@ -2,8 +2,11 @@
 
 namespace App\Listeners;
 
+use App\Events\UserPurchaseEvent;
+use App\Mail\UserPurchaseMail;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Support\Facades\Mail;
 
 class UserPurchaselistener
 {
@@ -18,8 +21,9 @@ class UserPurchaselistener
     /**
      * Handle the event.
      */
-    public function handle(object $event): void
+    public function handle(UserPurchaseEvent $event): void
     {
         //
+        Mail::to($event->artiste->email)->send(new UserPurchaseMail($event->artiste, $event->beat));
     }
 }

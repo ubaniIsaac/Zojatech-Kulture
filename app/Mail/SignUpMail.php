@@ -40,7 +40,7 @@ class SignUpMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'view.SignUpNotif',
+            view: 'emails.SignUpNotif',
         );
     }
 

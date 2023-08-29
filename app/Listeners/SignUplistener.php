@@ -2,6 +2,7 @@
 
 namespace App\Listeners;
 
+use App\Events\SignUpEvent;
 use App\Mail\SignUpMail;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
@@ -20,7 +21,7 @@ class SignUplistener
     /**
      * Handle the event.
      */
-    public function handle(object $event): void
+    public function handle(SignUpEvent $event): void
     {
         //
         Mail::to($event->user->email)->send(new SignUpMail($event->user));

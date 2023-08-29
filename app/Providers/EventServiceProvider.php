@@ -2,8 +2,12 @@
 
 namespace App\Providers;
 
+use App\Events\ProducerEvent;
 use App\Events\SignUpEvent;
+use App\Events\UserPurchaseEvent;
+use App\Listeners\Producerlistener;
 use App\Listeners\SignUplistener;
+use App\Listeners\UserPurchaselistener;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -22,6 +26,12 @@ class EventServiceProvider extends ServiceProvider
         ],
         SignUpEvent::class => [
             SignUplistener::class
+        ],
+        UserPurchaseEvent::class => [
+            UserPurchaselistener::class
+        ],
+        ProducerEvent::class => [
+            Producerlistener::class
         ],
     ];
 

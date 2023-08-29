@@ -23,7 +23,8 @@ Request Body:
   "profile_profile": "required| mimes:jpeg,png,jpg,gif,svg|max:2048",
   "password": "required| min:8",
   "confirm_password": "required| min:8",
-  "user_type": "requried|in:producer,artiste"
+  "user_type": "requried|in:producer,artiste",
+  "referred_by": "nullable | string"
 }
 ```
 

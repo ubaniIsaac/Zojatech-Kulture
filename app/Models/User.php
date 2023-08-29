@@ -9,7 +9,7 @@ use Illuminate\Support\Str;
 use Laravel\Passport\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Casts\Attribute;
-use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\{HasOne, BelongsTo};
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -32,7 +32,9 @@ class User extends Authenticatable
         'password',
         'confirm_password',
         'user_type',
-        'profile_picture'
+        'profile_picture',
+        'upload_limit',
+        'subscription_plan_id',
     ];
 
     /**
@@ -81,6 +83,16 @@ class User extends Authenticatable
     public function producers(): HasOne
     {
         return $this->hasOne(Producer::class);
+    }
+
+    /**
+     * Get the subscription associated with this user.
+     * 
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\Subscription>
+     */
+    public function subscription(): BelongsTo
+    {
+        return $this->belongsTo(Subscription::class);
     }
 
     public function artistes(): HasOne

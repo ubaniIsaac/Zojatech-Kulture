@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
-use App\Http\Controllers\api\{AuthController, BeatController, GenreController, UserController, ProducerController};
+use App\Http\Controllers\api\{AuthController, BeatController, CartController, GenreController, UserController, ProducerController};
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\CheckOwnership;
 
@@ -96,6 +96,11 @@ Route::prefix('v1')->group(function () {
 
         Route::prefix('downloads')->group(function () {
             Route::get('/beats/{id}', [BeatController::class, 'download'])->name('beats.download');
+        });
+
+        //CART
+        Route::prefix('cart')->group(function () {
+            Route::get('/{id}/beats', [CartController::class, 'index']);
         });
     });
 });

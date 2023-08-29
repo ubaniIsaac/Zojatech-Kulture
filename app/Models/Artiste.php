@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Beat;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -36,21 +37,10 @@ class Artiste extends User
         return $this->belongsTo(User::class);
     }
 
-    // public function producers(): BelongsToMany
-    // {
-    //     return $this->belongsToMany(Product::class, 'model_has_roles')
-    //         ->join('roles', 'model_has_roles.role_id', '=', 'roles.id')
-    //         ->where('roles.name', 'producer');
-    // }
-
-    // /**
-    //  * Get the beats for the producer.
-    //  * 
-    //  * @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\Beat, \App\Models\Producer>
-    //  */
-    // public function beats(): HasMany
-    // {
-    //     return $this->hasMany(Beat::class);
-    // }
+    public function favourites(): BelongsToMany
+    {
+        return $this->belongsToMany(Beat::class, 'favourites', 'artiste_id', 'beat_id')
+        ->withTimestamps();
+    }
 
 }

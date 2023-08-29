@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
-use App\Http\Controllers\api\{AuthController, BeatController, GenreController, UserController, ProducerController};
+use App\Http\Controllers\api\{AuthController, BeatController, GenreController, UserController, ProducerController, Cartcontroller};
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\CheckOwnership;
 
@@ -59,17 +59,19 @@ Route::prefix('v1')->group(function () {
 
     // Declare authenticated routes
     Route::group(['middleware' => 'auth:api'], static function () {
+
+        //Carts routes
         Route::prefix('carts')->middleware(['role:artiste'])->group(function(){
             Route::post('/add/{beat_id}',[Cartcontroller::class, 'add'])->name('add-beat-to-cart');
             Route::get('/view',[Cartcontroller::class, 'view'])->name('view-all-beats-in-cart');
-            Route::delete('/{beat_id}', [Cartcontroller::class, 'destroy'])->name('delet-from-cart');
+            Route::delete('/remove/{beat_id}', [Cartcontroller::class, 'destroy'])->name('delete-from-cart');
         });
 
-        //payment routes
-        Route::post('/pay', [PaymentController::class, 'makePayment']);
-        Route::post('/verifyPayment', [PaymentController::class, 'store']);
-        Route::post('/createRecipient', [PaymentController::class, 'createRecipient']);
-        Route::post('/withdraw', [PaymentController::class, 'initiateWithdrawal']);
+        //Payment routes
+        Route::post('/pay', [PaymentController::class, 'makePayment'])->name('initiatePayment');
+        Route::post('/verifyPayment', [PaymentController::class, 'store'])->name('verifyPayment');
+        Route::post('/createRecipient', [PaymentController::class, 'createRecipient'])->name('createRecipient');
+        Route::post('/withdraw', [PaymentController::class, 'initiateWithdrawal'])->name('withdraw');
 
 
 

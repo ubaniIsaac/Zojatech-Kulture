@@ -32,9 +32,10 @@ class PaymentController extends Controller
         $user = auth()->user();
         $ref = uniqid();
         $data = [
-            'amount' => $request->amount * 100 * $request->quantity,
+            'amount' => $request->total_price * 100,
             'email' => $user?->email,
             'user_id' => $user?->id,
+            'cart_id' => $request->cart_id,
             'quantity' => $request->quantity,
             'reference' => $ref,
             'callback_url' => route('verifyTransaction')
@@ -62,14 +63,17 @@ class PaymentController extends Controller
                     return response()->json([
                         "message" => "Payment already verified",
                         "data" =>  $payment,
-                        'status' => 200
-                    ]);
+                    ], 409);
                 }
 
                 $payment->status = 'successful'; // @phpstan-ignore-line
                 $payment?->save();
 
-
+                //todo: disburse funds / update all producers' wallet / update Admin wallet. 
+                //todo: update beat details. 
+                //todo: update access. 
+                //todo: send Notification. 
+                //todo:empty cart
 
                 return response()->json([
                     "message" => "Payment Successful",

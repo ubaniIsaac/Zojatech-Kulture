@@ -12,31 +12,20 @@ class Cart extends Model
     use HasFactory;
     protected $fillable = [
         'user_id',
-        'beats_id',
+        'beats_id', 
         'items',
         'total_price',
     ];
-    // protected $casts = [
-    //     'items' => 'array', // Cast the JSON column to an array
-    //];
+    protected $casts = [
+        'items' => 'array', // Cast the JSON column to an array
+    ];
 
-    public function beat()
+    public function beat(): HasMany
     {
         return $this->hasMany(Beat::class, 'id', 'items');
-       // return Beat::whereIn('id', $this->items)->get();
     }
     public function user(): belongsTo
     {
         return $this->belongsTo(User::class);
     }
-
-    public function cart(): belongsTo
-    {
-        return $this->belongsTo(Cart::class);
-    }
-
-    //public function beats(): HasMany
-    // {
-    //     return $this->hasMany(Beat::class);
-    // }
 }

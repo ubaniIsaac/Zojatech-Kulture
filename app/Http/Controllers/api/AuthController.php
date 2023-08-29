@@ -47,7 +47,7 @@ class AuthController extends Controller
             $user->producers()->create(['user_id' => $user->id]);
         } elseif ($data['user_type'] === 'artiste') {
             $user->artistes()->create(['user_id' => $user->id]);
-            Cart::create(['user_id' => $user->id]);
+            Cart::create(['user_id' => $user->id, 'items' => []]);
         }
 
         new SignUpEvent($user);

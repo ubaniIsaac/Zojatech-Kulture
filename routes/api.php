@@ -54,11 +54,24 @@ Route::prefix('v1')->group(function () {
             Route::get('/genres', [GenreController::class, 'trending'])->name('genres.trending');
         });
     });
-
+      //Authentication
 
 
     // Declare authenticated routes
     Route::group(['middleware' => 'auth:api'], static function () {
+        Route::prefix('carts')->middleware(['role:artiste'])->group(function(){
+            Route::post('/add/{beat_id}',[Cartcontroller::class, 'add'])->name('add-beat-to-cart');
+            Route::get('/view',[Cartcontroller::class, 'view'])->name('view-all-beats-in-cart');
+            Route::delete('/{beat_id}', [Cartcontroller::class, 'destroy'])->name('delet-from-cart');
+        });
+
+        //payment routes
+        Route::post('/pay', [PaymentController::class, 'makePayment']);
+        Route::post('/verifyPayment', [PaymentController::class, 'store']);
+        Route::post('/createRecipient', [PaymentController::class, 'createRecipient']);
+        Route::post('/withdraw', [PaymentController::class, 'initiateWithdrawal']);
+
+
 
         //Admin routes
         Route::prefix('admin')->group(function () {

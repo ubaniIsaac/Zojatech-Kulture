@@ -54,7 +54,7 @@ Route::prefix('v1')->group(function () {
             Route::get('/genres', [GenreController::class, 'trending'])->name('genres.trending');
         });
     });
-
+      //Authentication
 
 
     // Declare authenticated routes

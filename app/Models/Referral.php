@@ -16,11 +16,21 @@ class Referral extends Model
         'user_id',
     ];
 
-    // Define relationships
+    /**
+     * Get the user associated with the referral.
+     * 
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\User, \App\Models\Referral>
+     */
     public function referrer(): BelongsTo
     {
         return $this->belongsTo(User::class, 'referrer_user_id');
     }
+
+    /**
+     * Get the user associated with the referral.
+     * 
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\User, \App\Models\Referral>
+     */
 
     public function referred()
     {

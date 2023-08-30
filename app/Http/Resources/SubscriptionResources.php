@@ -6,7 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 /**
- *  @mixin \App\Models\Subscription */
+ *  @mixin \App\Models\Subscription
+ */
 
 
 class SubscriptionResources extends JsonResource
@@ -26,7 +27,7 @@ class SubscriptionResources extends JsonResource
                 'no_of_subscribers' => $this->users->count(),
                 'upload_limit' => $this->upload_limit,
             ],
-            
+
             'subscribers' => $this->users,
         ];
     }

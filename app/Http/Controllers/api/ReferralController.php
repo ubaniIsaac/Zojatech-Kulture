@@ -11,7 +11,7 @@ class ReferralController extends Controller
 {
     //
 
-    public static function generateReferralCode($length = 6): string
+    public static function generateReferralCode(): string
     {
 
         $code =  strtoupper(Str::random(5));

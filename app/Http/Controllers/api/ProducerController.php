@@ -15,7 +15,7 @@ use Illuminate\Http\Request;
 class ProducerController extends Controller
 {
     use ResponseTrait;
-    public function index(Request $request)
+    public function index(Request $request): JsonResponse
     {
         try {
             $producers = Producer::latest()->paginate(10)->through(fn ($producer) => new ProducerResources($producer));
@@ -26,20 +26,18 @@ class ProducerController extends Controller
         }
     }
 
-    public function show(string $id)
+    public function show(string $id): JsonResponse
     {
         try {
             $producer = User::findOrFail($id);
 
-            if(!$producer){
-                return $this->errorResponse('User is not a Producer');
-            } else{
+            if ($producer) {
                 $producer = Producer::where('user_id', $id)->first();
-
+                $producer->increment('profile_views');
+            } else {
+                return $this->errorResponse('User is not a Producer');
             }
 
-            //update Producer view count
-            $producer->increment('profile_views');
 
             return $this->successResponse('Producer retrieved successfully', [
                 'data' => new ProducerResources($producer)

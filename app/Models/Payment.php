@@ -14,6 +14,11 @@ class Payment extends Model
         'reference',
         'user_id',
         'cart_id',
+        'cart_items',
         'status'
+    ];
+
+    protected $casts = [
+        'cart_items' => 'array', // Cast the JSON column to an array
     ];
 }

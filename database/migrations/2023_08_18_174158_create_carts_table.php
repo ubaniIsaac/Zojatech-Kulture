@@ -19,6 +19,9 @@ return new class extends Migration
             $table->json('items')->nullable();
             $table->double('total_price')->nullable();
             $table->timestamps();
+
+            $table->foreignUlid('beat_id')->constrained('beats')->cascadeOnDelete();
+            $table->foreignUlid('user_id')->constrained('users')->cascadeOnDelete();
         });
     }
 

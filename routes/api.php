@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
-use App\Http\Controllers\api\{AuthController, BeatController, GenreController, UserController, ProducerController, Cartcontroller};
+use App\Http\Controllers\api\{AuthController, BeatController, GenreController, UserController, ProducerController, SubscriptionController, Cartcontroller, PaymentController};
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\CheckOwnership;
 
@@ -18,6 +18,7 @@ use App\Http\Middleware\CheckOwnership;
 
 
 Route::prefix('v1')->group(function () {
+
 
 
     // Declare unauthenticated routes
@@ -54,7 +55,12 @@ Route::prefix('v1')->group(function () {
             Route::get('/genres', [GenreController::class, 'trending'])->name('genres.trending');
         });
     });
-      //Authentication
+    //Authentication
+
+
+
+
+
 
 
     // Declare authenticated routes
@@ -67,11 +73,14 @@ Route::prefix('v1')->group(function () {
             Route::delete('/remove/{beat_id}', [Cartcontroller::class, 'destroy'])->name('delete-from-cart');
         });
 
-        //Payment routes
-        Route::post('/pay', [PaymentController::class, 'makePayment'])->name('initiatePayment');
-        Route::post('/verifyPayment', [PaymentController::class, 'store'])->name('verifyPayment');
-        Route::post('/createRecipient', [PaymentController::class, 'createRecipient'])->name('createRecipient');
-        Route::post('/withdraw', [PaymentController::class, 'initiateWithdrawal'])->name('withdraw');
+        //payment routes
+        Route::prefix('payment')->group(function () {
+
+            Route::post('/pay', [PaymentController::class, 'makePayment']);
+            Route::post('/verifyPayment', [PaymentController::class, 'store']);
+            Route::post('/createRecipient', [PaymentController::class, 'createRecipient']);
+            Route::post('/withdraw', [PaymentController::class, 'initiateWithdrawal']);
+        });
 
 
 
@@ -85,6 +94,16 @@ Route::prefix('v1')->group(function () {
                 Route::post('/update', [GenreController::class, 'update'])->name('genre.update');
                 Route::post('/delete', [GenreController::class, 'delete'])->name('genre.delete');
             });
+
+            Route::prefix('subscription')->group(function () {
+                Route::post('/create', [SubscriptionController::class, 'store'])->name('subscription.store');
+
+                Route::get('', [SubscriptionController::class, 'index'])->name('subscription.index');
+
+                Route::post('/{id}', [SubscriptionController::class, 'show'])->name('subscription.show');
+            });
+
+           
         });
 
         //User routes

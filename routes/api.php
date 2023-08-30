@@ -57,17 +57,16 @@ Route::prefix('v1')->group(function () {
     });
     //Authentication
 
-    Route::post('subscriptions/create', [SubscriptionController::class, 'store'])->name('subscription.store');
 
-    Route::get('subscriptions', [SubscriptionController::class, 'index'])->name('subscription.index');
 
-    Route::post('subscriptions/{id}', [SubscriptionController::class, 'show'])->name('subscription.show');
 
 
 
 
     // Declare authenticated routes
     Route::group(['middleware' => 'auth:api'], static function () {
+
+
         Route::prefix('carts')->middleware(['role:artiste'])->group(function () {
             Route::post('/add/{beat_id}', [Cartcontroller::class, 'add'])->name('add-beat-to-cart');
             Route::get('/view', [Cartcontroller::class, 'view'])->name('view-all-beats-in-cart');
@@ -97,12 +96,14 @@ Route::prefix('v1')->group(function () {
             });
 
             Route::prefix('subscription')->group(function () {
+                Route::post('/create', [SubscriptionController::class, 'store'])->name('subscription.store');
 
-                // Route::post('/update', [SubcriptionController::class, 'update'])->name('subcription.update');
-                // Route::post('/delete', [SubcriptionController::class, 'delete'])->name('subcription.delete');
+                Route::get('', [SubscriptionController::class, 'index'])->name('subscription.index');
 
-
+                Route::post('/{id}', [SubscriptionController::class, 'show'])->name('subscription.show');
             });
+
+           
         });
 
         //User routes

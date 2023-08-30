@@ -9,7 +9,7 @@ use Illuminate\Support\Str;
 use Laravel\Passport\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Casts\Attribute;
-use Illuminate\Database\Eloquent\Relations\{HasOne, BelongsTo};
+use Illuminate\Database\Eloquent\Relations\{HasOne, BelongsTo, HasMany};
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -34,6 +34,9 @@ class User extends Authenticatable
         'user_type',
         'profile_picture',
         'upload_limit',
+        'referral_code',
+        'referred_by',
+        'subscription_plan',
         'subscription_plan_id',
     ];
 
@@ -86,18 +89,46 @@ class User extends Authenticatable
     }
 
     /**
+     * Get the producer associated with the user.
+     * 
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne<\App\Models\Artiste>
+     */
+
+    public function artistes(): HasOne
+    {
+        return $this->hasOne(Artiste::class);
+    }
+
+    /**
      * Get the subscription associated with this user.
      * 
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\Subscription>
      */
     public function subscription(): BelongsTo
     {
-        return $this->belongsTo(Subscription::class);
+        return $this->belongsTo(Subscription::class, 'subscription_plan_id');
     }
 
-    public function artistes(): HasOne
+    /**
+     * Get the referrer associated with this user.
+     * 
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\User>
+     */
+
+    public function referred_by(): BelongsTo
     {
-        return $this->hasOne(Artiste::class);
+        return $this->belongsTo(User::class, 'referred_by', 'user_id');
+    }
+
+    /**
+     * Get the referrals associated with this user.
+     * 
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne<\App\Models\Referral>
+     */
+
+    public function referrals(): HasMany
+    {
+        return $this->hasMany(Referral::class, 'referred_by');
     }
 
     public function guardName(): mixed

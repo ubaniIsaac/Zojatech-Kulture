@@ -27,19 +27,29 @@ class AuthController extends Controller
         $my_referral_code = ReferralController::generateReferralCode();
 
 
-        if ($request->filled('referredBy')) {
-            $referral = Referral::where('referral_code', $request->referredBy)->first();
-            $refferd_by = $referral->user_id;
+        if ($request->filled('referred_by')) {
+            $referral = Referral::where('referral_code', $request->referred_by)->first();
+
+            if (!$referral) {
+                return $this->errorResponse('Invalid referral code', 404);
+            } else {
+                $refferd_by = $referral->user_id;
+            }
+
+
 
             $subscription_details = Subscription::where('plan', 'Referral Plan')->first();
+            $subscription_details->increment('subscribers');
         } else {
             $subscription_details = Subscription::where('plan', 'Free Plan')->first();
+            $subscription_details->increment('subscribers');
         }
 
         if ($request->hasFile('profile_picture')) {
             $imageUrl = MediaService::uploadImage($request->file('profile_picture'), 'profileImages');
-        }   
+        }
 
+        // dd($my_referral_code);
 
         $user = User::create(array_merge(
             $request->validated(),
@@ -52,7 +62,10 @@ class AuthController extends Controller
                 'user_type' => $request->user_type,
                 'password' => $request->password,
                 'confirm_password' => $request->confirm_password,
+                'referral_code' => $my_referral_code,
+                'referred_by' => $refferd_by ?? '',
                 'upload_limit' => $subscription_details->upload_limit ?? 0,
+                'subscription_plan' => $subscription_details->plan,
                 'subscription_plan_id' => $subscription_details->id ?? 0,
 
             ]
@@ -68,16 +81,16 @@ class AuthController extends Controller
 
         new SignUpEvent($user);
 
+
+
         $referral_details = Referral::create([
-            'my_referral_code' => $my_referral_code,
+            'referral_code' => $my_referral_code,
             'referred_by' => $refferd_by ?? '',
             'user_id' => $user->id,
         ]);
 
 
-        return $this->successResponse('User created successfully', [
-            'user' => new UserResources($user)
-        ]);
+        return $this->successResponse('User created successfully', new UserResources($user), 201);
     }
 
     public function signin(LoginRequest $request): JsonResponse

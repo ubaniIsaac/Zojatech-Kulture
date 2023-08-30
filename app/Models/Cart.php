@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\{BelongsTo, HasMany};
 
 class Cart extends Model
 {
-    use HasFactory;
+    use HasFactory , HasUlids;
     protected $fillable = [
         'user_id',
         'beats_id',
@@ -20,23 +20,18 @@ class Cart extends Model
     //     'items' => 'array', // Cast the JSON column to an array
     //];
 
-    public function beat()
+    public function beat(): hasMany
     {
         return $this->hasMany(Beat::class, 'id', 'items');
-       // return Beat::whereIn('id', $this->items)->get();
     }
     public function user(): belongsTo
     {
         return $this->belongsTo(User::class);
     }
 
-    public function cart(): belongsTo
-    {
-        return $this->belongsTo(Cart::class);
-    }
-
-    //public function beats(): HasMany
+    // public function cart(): belongsTo
     // {
-    //     return $this->hasMany(Beat::class);
+    //     return $this->belongsTo(Cart::class);
     // }
+
 }

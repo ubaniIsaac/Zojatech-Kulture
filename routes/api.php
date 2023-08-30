@@ -76,10 +76,10 @@ Route::prefix('v1')->group(function () {
         //payment routes
         Route::prefix('payment')->group(function () {
 
-            Route::post('/pay', [PaymentController::class, 'makePayment']);
-            Route::post('/verifyPayment', [PaymentController::class, 'store']);
-            Route::post('/createRecipient', [PaymentController::class, 'createRecipient']);
-            Route::post('/withdraw', [PaymentController::class, 'initiateWithdrawal']);
+            Route::post('/pay', [PaymentController::class, 'makePayment'])->name('initiatePayment');
+            Route::get('/verifyPayment', [PaymentController::class, 'verifyPayment'])->name('verifyTransaction');
+            Route::post('/createRecipient', [PaymentController::class, 'createRecipient'])->name('createRecipient');
+            Route::post('/withdraw', [PaymentController::class, 'initiateWithdrawal'])->name('initiatewithdrawal');
         });
 
 

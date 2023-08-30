@@ -13,7 +13,7 @@ class Payment extends Model
         'amount',
         'reference',
         'user_id',
-        'quantity',
+        'cart_id',
         'status'
     ];
 }

@@ -23,10 +23,7 @@ class PaymentRequest extends FormRequest
     {
         return [
             //
-            'amount' => ['required', 'numeric'],
-            'event_id' => ['required', 'exists:events,id'],
-            'ticket_type' => ['required', 'string'],
-            'quantity' => ['required', 'integer']
+            'cart_id' => ['required'],
 
         ];
     }

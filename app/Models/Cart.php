@@ -12,18 +12,15 @@ class Cart extends Model
     use HasFactory, HasUlids;
     protected $fillable = [
         'user_id',
-        'beats_id',
+        'beats_id', 
         'items',
         'total_price',
     ];
+    protected $casts = [
+        'items' => 'array', // Cast the JSON column to an array
+    ];
 
-    /**
-     * Get the beats associated with the cart.
-     * 
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\Beat>
-     */
-
-    public function beat(): hasMany
+    public function beat(): HasMany
     {
         return $this->hasMany(Beat::class, 'id', 'items');
     }

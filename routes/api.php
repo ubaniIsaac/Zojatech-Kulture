@@ -66,20 +66,20 @@ Route::prefix('v1')->group(function () {
     // Declare authenticated routes
     Route::group(['middleware' => 'auth:api'], static function () {
 
-
-        Route::prefix('carts')->middleware(['role:artiste'])->group(function () {
-            Route::post('/add/{beat_id}', [Cartcontroller::class, 'add'])->name('add-beat-to-cart');
-            Route::get('/view', [Cartcontroller::class, 'view'])->name('view-all-beats-in-cart');
-            Route::delete('/{beat_id}', [Cartcontroller::class, 'destroy'])->name('delet-from-cart');
+        //Carts routes
+        Route::prefix('carts')->middleware(['role:artiste'])->group(function(){
+            Route::post('/add/{beat_id}',[Cartcontroller::class, 'add'])->name('add-beat-to-cart');
+            Route::get('/view',[Cartcontroller::class, 'view'])->name('view-all-beats-in-cart');
+            Route::delete('/remove/{beat_id}', [Cartcontroller::class, 'destroy'])->name('delete-from-cart');
         });
 
         //payment routes
         Route::prefix('payment')->group(function () {
 
-            Route::post('/pay', [PaymentController::class, 'makePayment']);
-            Route::post('/verifyPayment', [PaymentController::class, 'store']);
-            Route::post('/createRecipient', [PaymentController::class, 'createRecipient']);
-            Route::post('/withdraw', [PaymentController::class, 'initiateWithdrawal']);
+            Route::post('/pay', [PaymentController::class, 'makePayment'])->name('initiatePayment');
+            Route::get('/verifyPayment', [PaymentController::class, 'verifyPayment'])->name('verifyTransaction');
+            Route::post('/createRecipient', [PaymentController::class, 'createRecipient'])->name('createRecipient');
+            Route::post('/withdraw', [PaymentController::class, 'initiateWithdrawal'])->name('initiatewithdrawal');
         });
 
 

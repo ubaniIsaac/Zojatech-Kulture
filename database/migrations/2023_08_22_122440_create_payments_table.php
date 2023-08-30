@@ -11,15 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // Schema::create('payments', function (Blueprint $table) {
-        //     $table->id();
-        //     $table->double('amount', 20,8);
-        //     $table->foreignUlid('user_id')->constrained('users')->cascadeOnDelete();
-        //     $table->foreignId('cart_id')->constrained('carts')->cascadeOnDelete();
-        //     $table->string('reference');
-        //     $table->string('status')->default('pending');
-        //     $table->timestamps();
-        // });
+        Schema::create('payments', function (Blueprint $table) {
+            $table->id();
+            $table->double('amount', 20,8);
+            $table->foreignUlid('user_id')->constrained('users')->cascadeOnDelete();
+            $table->foreignUlid('cart_id')->constrained('carts')->cascadeOnDelete();
+            $table->string('reference');
+            $table->string('status')->default('pending');
+            $table->timestamps();
+        });
     }
 
     /**

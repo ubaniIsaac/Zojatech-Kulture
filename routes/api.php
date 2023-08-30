@@ -1,9 +1,9 @@
 <?php
 
 use Illuminate\Http\Request;
-use App\Http\Controllers\api\{AuthController, BeatController, GenreController, UserController, ProducerController, SubscriptionController, Cartcontroller, PaymentController};
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\CheckOwnership;
+use App\Http\Controllers\api\{AuthController, BeatController, Cartcontroller, FavouriteController, GenreController, PaymentController, ProducerController, SubscriptionController, UserController};
 
 /*
 |--------------------------------------------------------------------------
@@ -136,6 +136,14 @@ Route::prefix('v1')->group(function () {
         Route::prefix('favourites')->group(function () {
             Route::get('/{id}/beats', [FavouriteController::class, 'index']);
             Route::post('/{id}', [FavouriteController::class, 'store'])->name('favourite.store');
+            Route::delete('/{id}', [FavouriteController::class, 'delete'])->name('favourite.delete');
+        });
+
+        //Dashboard
+        Route::prefix('dashboard')->group(function () {
+            Route::get('/producer/{id}', [ProducerController::class, 'producerDashboard']);
+            Route::get('/artiste/{id}', [ArtisteController::class, 'artisteDashboard']);
+
         });
     });
 });

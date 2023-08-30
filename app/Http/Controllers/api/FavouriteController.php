@@ -6,6 +6,7 @@ use App\Models\Beat;
 use App\Models\User;
 use App\Models\Artiste;
 use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\CartResource;
 use App\Http\Resources\FavouriteResource;
@@ -57,26 +58,31 @@ class FavouriteController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+
+    public function delete(Request $request, string $id): JsonResponse
     {
-        //
+       
+        try {
+            $auth = auth()->id();
+            $user = User::find($auth);
+            $beat = Beat::find($id);
+            
+            $isExist = $user->favourites->contains($beat->id);
+
+            if($isExist) {
+             $user->favourites()->detach($beat->id);
+
+            }
+                return response()->json([
+                    'message' => 'Beat removed from favorites.'
+                ], 200);
+
+        } catch (\Throwable $th) {
+            return response()->json([
+                'error' => 'error occurred while removing beat from favourites.'
+            ], 200);
+        }
     }
 }

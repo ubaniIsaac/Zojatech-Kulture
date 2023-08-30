@@ -6,6 +6,11 @@ use App\Models\Beat;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
+/**
+ * @mixin \App\Models\Cart
+ */
+
+
 class CartResource extends JsonResource
 {
     /**

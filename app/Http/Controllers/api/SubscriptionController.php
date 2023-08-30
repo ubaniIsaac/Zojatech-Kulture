@@ -45,7 +45,7 @@ class SubscriptionController extends Controller
         }
     }
 
-    public function update(SubscriptionRequest $request, $id): JsonResponse
+    public function update(SubscriptionRequest $request,string $id): JsonResponse
     {
 
         try {
@@ -63,7 +63,7 @@ class SubscriptionController extends Controller
         }
     }
 
-    public function destroy($id): JsonResponse
+    public function destroy(string $id): JsonResponse
     {
         $subscription = Subscription::findOrFail($id);
 

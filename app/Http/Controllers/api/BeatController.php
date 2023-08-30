@@ -144,7 +144,7 @@ class BeatController extends Controller
         }
     }
 
-    public function download(string $id): StreamedResponse
+    public function download(string $id): Mixed
     {
         try {
             $beat = Beat::find($id);

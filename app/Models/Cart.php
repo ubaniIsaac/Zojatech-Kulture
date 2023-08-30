@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\{BelongsTo, HasMany};
 
 class Cart extends Model
 {
-    use HasFactory , HasUlids;
+    use HasFactory, HasUlids;
     protected $fillable = [
         'user_id',
         'beats_id', 
@@ -24,6 +24,13 @@ class Cart extends Model
     {
         return $this->hasMany(Beat::class, 'id', 'items');
     }
+
+    /**
+     * Get the user associated with the cart.
+     * 
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\User, \App\Models\Cart>
+     */
+
     public function user(): belongsTo
     {
         return $this->belongsTo(User::class);

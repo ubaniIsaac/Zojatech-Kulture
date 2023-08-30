@@ -76,6 +76,7 @@ class PaymentController extends Controller
                 // disburse funds / update all producers' wallet / update Admin wallet. 
                     $cart = Cart::findorfail($payment->cart_id);
                     foreach($cart->items as $item){
+                        //update beat details. 
                         $beat = Beat::findorfail($item);
                         $beat->producer->total_revenue += $beat->price;
                         $beat->producer->increment('total_beats_sold');
@@ -85,10 +86,10 @@ class PaymentController extends Controller
                         $beat->producer->save();          
                     }
 
-                    //todo: update beat details. 
                     //todo: update access. 
                     //todo: send Notification. 
-                    //todo:empty cart
+
+                    //empty cart
                     $cart->update(['items' => [], 'total_price' => 0]);
                     
                     

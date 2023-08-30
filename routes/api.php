@@ -74,14 +74,13 @@ Route::prefix('v1')->group(function () {
         });
 
         //payment routes
-        Route::prefix('payment')->group(function () {
-
+        Route::prefix('payment')->middleware(['role:artiste'])->group(function () {
             Route::post('/pay', [PaymentController::class, 'makePayment'])->name('initiatePayment');
             Route::get('/verifyPayment', [PaymentController::class, 'verifyPayment'])->name('verifyTransaction');
             Route::post('/createRecipient', [PaymentController::class, 'createRecipient'])->name('createRecipient');
-            Route::post('/withdraw', [PaymentController::class, 'initiateWithdrawal'])->name('initiatewithdrawal');
         });
-
+        
+        Route::post('/payment/withdraw',  [PaymentController::class, 'initiateWithdrawal'])->middleware(['role:producer'])->name('initiatewithdrawal');
 
 
         //Admin routes

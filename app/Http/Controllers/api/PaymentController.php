@@ -36,7 +36,6 @@ class PaymentController extends Controller
             'email' => $user?->email,
             'user_id' => $user?->id,
             'cart_id' => $request->cart_id,
-            'quantity' => $request->quantity,
             'reference' => $ref,
             'callback_url' => route('verifyTransaction')
         ];

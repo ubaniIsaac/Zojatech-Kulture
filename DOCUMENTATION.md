@@ -90,6 +90,60 @@ Response Body
     }
 }
 ```
+### USERS
+
+Endpoint: `GET /api/v1/users/:id`
+
+Response Body:
+
+```json
+{
+    "status": true,
+    "message": "User retrieved succcessfully",
+    "data": {
+        "id": "01h91tyhwrpn05h44bs28ay87w",
+        "type": "users",
+        "attributes": {
+            "username": "skay1",
+            "first_name": "Nayeli",
+            "last_name": "Benjamin",
+            "email": "user1@mail.com",
+            "profile_picture": "",
+            "upload_limit": 10,
+            "referral_code": "KULTURE-RXJGN",
+            "referred_by": "01h91sx6kqhxt4ydg6xm0m1w6z",
+            "no_of_referrals": 0,
+            "subscription_plan": "Referral Plan",
+            "user_type": "producer",
+            "created_at": "2023-08-29T23:44:35.000000Z",
+            "updated_at": "2023-08-29T23:44:35.000000Z"
+        },
+        "referred_by": "01h91sx6kqhxt4ydg6xm0m1w6z",
+        "referrals": [
+            {
+                "referral_code": "KULTURE-QIAFV",
+                "created_at": "2023-08-30T01:14:24.000000Z",
+                "updated_at": "2023-08-30T01:14:24.000000Z",
+                "referred_by": "01h91tyhwrpn05h44bs28ay87w",
+                "user_id": "01h92030kt66k3ct1sn0qzzynj"
+            }
+        ],
+        "subscription": {
+            "id": "01h91s8cqcktqdsxzkp193bxd7",
+            "plan": "Referral Plan",
+            "price": 0,
+            "upload_limit": 10,
+            "subscribers": 1,
+            "created_at": "2023-08-29T23:15:00.000000Z",
+            "updated_at": "2023-08-30T01:14:24.000000Z"
+        }
+    }
+}
+
+
+```
+
+
 ### TRENDING
 
 Endpoint: `GET /api/v1/trending/beats`

@@ -65,7 +65,7 @@ class AuthController extends Controller
                 'referral_code' => $my_referral_code,
                 'referred_by' => $refferd_by ?? '',
                 'upload_limit' => $subscription_details->upload_limit ?? 0,
-                'subscription_plan' => $subscription_details->plan,
+                'subscription_plan' => $subscription_details->plan ?? 'Free Plan',   
                 'subscription_plan_id' => $subscription_details->id ?? 0,
 
             ]
@@ -76,7 +76,7 @@ class AuthController extends Controller
             $user->producers()->create(['user_id' => $user->id]);
         } elseif ($data['user_type'] === 'artiste') {
             $user->artistes()->create(['user_id' => $user->id]);
-            // Cart::create(['user_id' => $user->id]);
+            Cart::create(['user_id' => $user->id, 'items' => []]);
         }
 
         new SignUpEvent($user);

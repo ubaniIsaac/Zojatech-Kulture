@@ -4,8 +4,10 @@ namespace App\Http\Controllers\api;
 
 use App\Http\Requests\PaymentRequest;
 use App\Http\Controllers\Controller;
+use App\Models\Beat;
 use App\Models\Payment;
 use App\Models\Producer;
+use App\Models\Cart;
 use App\Models\User;
 use App\Services\PaymentService;
 use App\Traits\ResponseTrait;
@@ -31,14 +33,16 @@ class PaymentController extends Controller
     {
         $user = auth()->user();
         $ref = uniqid();
+        $cart = Cart::findorfail($request->cart_id);
         $data = [
-            'amount' => $request->amount * 100 * $request->quantity,
+            'amount' => $cart->total_price * 100,
             'email' => $user?->email,
             'user_id' => $user?->id,
-            'quantity' => $request->quantity,
+            'cart_id' => $request->cart_id,
             'reference' => $ref,
             'callback_url' => route('verifyTransaction')
         ];
+
         Payment::create(Arr::except($data, ['callback_url', 'email']));
 
         $result = $this->paymentService->initializePayment($data);
@@ -50,7 +54,7 @@ class PaymentController extends Controller
         ]);
     }
 
-    public function verifyTransaction(Request $request): JsonResponse
+    public function verifyPayment(Request $request): JsonResponse
     {
         try {
             $response =  $this->paymentService->verifyPayment($request->reference);
@@ -58,22 +62,32 @@ class PaymentController extends Controller
             if ($response['status'] == true) {
                 $payment = Payment::where('reference', $request->reference)->first();
 
-                if ($payment?->status == 'successful') {
-                    return response()->json([
-                        "message" => "Payment already verified",
-                        "data" =>  $payment,
-                        'status' => 200
-                    ]);
-                }
+                // if ($payment?->status == 'successful') {
+                //     return response()->json([
+                //         "message" => "Payment already verified",
+                //         "data" =>  $payment,
+                //     ], 409);
+                // }
 
                 $payment->status = 'successful'; // @phpstan-ignore-line
                 $payment?->save();
 
-
+                //todo: disburse funds / update all producers' wallet / update Admin wallet. 
+                    $cart = Cart::findorfail($payment->cart_id);
+                    foreach($cart->items as $item){
+                        $beat = Beat::findorfail($item);
+                        $beat->producer->total_revenue += $beat->price;
+                        $beat->producer->increment('total_beats_sold');
+                        $beat->producer->save();          
+                    }
+                //todo: update beat details. 
+                //todo: update access. 
+                //todo: send Notification. 
+                //todo:empty cart
 
                 return response()->json([
                     "message" => "Payment Successful",
-                    "data" =>  'test',
+                    "data" =>  $payment,
                     'status' => 200
                 ]);
             }

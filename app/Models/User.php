@@ -103,7 +103,7 @@ class User extends Authenticatable
     /**
      * Get the subscription associated with this user.
      * 
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\Subscription>
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\Subscription, \App\Models\User>
      */
     public function subscription(): BelongsTo
     {
@@ -113,18 +113,18 @@ class User extends Authenticatable
     /**
      * Get the referrer associated with this user.
      * 
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\User>
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\User, \App\Models\Referral>
      */
 
     public function referred_by(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'referred_by', 'user_id');
+        return $this->belongsTo(User::class);
     }
 
     /**
      * Get the referrals associated with this user.
      * 
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne<\App\Models\Referral>
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\Referral>
      */
 
     public function referrals(): HasMany

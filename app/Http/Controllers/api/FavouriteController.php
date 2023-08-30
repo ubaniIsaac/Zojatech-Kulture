@@ -34,18 +34,24 @@ class FavouriteController extends Controller
     public function store(Request $request, string $id)
     {
         try {
-            $auth = auth()->id();
-            $user = User::find($auth);
+            $authId = auth()->id();
+
+            if (!$authId) {
+                return $this->errorResponse('User not found');
+            }
+
+            $artiste = Artiste::where('user_id', $authId)->first();
+            // $artiste = User::find($auth);
             $beat = Beat::find($id);
 
-            $favourited = $user->favourites->contains($beat->id);
+            $favourited = $artiste->favourites->contains($beat->id);
 
             if($favourited) {
                 return response()->json([
                     'message' => 'beat already exists in favourites'
                 ], 200);
             }
-                $user->favourites()->attach($beat->id);
+                $artiste->favourites()->attach($beat->id);
                 return response()->json([
                     'message' => 'beat added to favourites'
                 ], 200);

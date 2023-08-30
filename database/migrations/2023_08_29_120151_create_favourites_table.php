@@ -12,9 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('favourites', function (Blueprint $table) {
-            $table->foreignUlid('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreignUlid('artiste_id')->references('id')->on('artistes')->onDelete('cascade');
             $table->foreignUlid('beat_id')->references('id')->on('beats')->onDelete('cascade');
-            $table->unique(['user_id', 'beat_id']);
+            $table->unique(['artiste_id', 'beat_id']);
             $table->timestamps();
         });
     }

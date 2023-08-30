@@ -2,11 +2,27 @@
 
 Welcome to the documentation for the Kulture App API. This document provides information about the available routes, endpoints, and functionality of the API.
 
-## Authentication
+## Table of Contents
+
+- [Authentication](#authentication)
+  - [REGISTER](#register)
+  - [LOGIN](#login)
+- [User](#users)
+  - [Fetch user by ID](#fetch-user-by-id)
+ 
+- [TRENDING](#trending)
+  - [Trending Beats](#trending-beats)
+  - [Trending Producers](#trending-producers)
+  - [Trending Genres](#trending-genres)
+
+- [Beats](#beats)
+    -   [Fetch Beat by ID](#fetch-beat-by-id)
+
+## Authentication<a name="authentication"></a>
 
 Before using the API, you need to authenticate. Here are the authentication routes:
 
-### REGISTER
+### REGISTER<a name="register"></a>
 
 Endpoint: `POST /api/v1/register`
 
@@ -53,7 +69,7 @@ Response Body:
 }
 ```
 
-### LOGIN
+### LOGIN<a name="login"></a>
 
 Endpoint: `POST /api/v1/signin`
 
@@ -92,9 +108,9 @@ Response Body
 }
 ```
 
-### USERS
+### USERS<a name="users"></a>
 
-Endpoint: `GET /api/v1/users/:id`
+Endpoint: `GET /api/v1/users/:id`<a name="fetch-user-by-id"></a>
 
 Response Body:
 
@@ -143,9 +159,9 @@ Response Body:
 }
 ```
 
-### TRENDING
+### TRENDING<a name="trending"></a>
 
-Endpoint: `GET /api/v1/trending/beats`
+Endpoint: `GET /api/v1/trending/beats`<a name="trending-beats"></a>
 
 Response Body:
 
@@ -188,7 +204,7 @@ Response Body:
 }
 ```
 
-Endpoint: `GET /api/v1/trending/producers`
+Endpoint: `GET /api/v1/trending/producers`<a name="trending-producers"></a>
 
 Response Body:
 
@@ -225,7 +241,7 @@ Response Body:
 }
 ```
 
-Endpoint: `GET /api/v1/trending/genres`
+Endpoint: `GET /api/v1/trending/genres`<a name="trending-genres"></a>
 
 Response Body:
 
@@ -293,5 +309,48 @@ Response Body:
       }
     ]
   }
+}
+```
+
+### Beats<a name="beats"></a>
+
+Endpoint: `GET /api/v1/beats/:id`<a name="fetch-beat-by-id"></a>
+
+Response Body:
+
+```json
+{
+    "status": true,
+    "message": "Beat retrieved successfully",
+    "data": {
+        "id": "01h8en156xvr9mdg58km3mteae",
+        "attributes": {
+            "name": "virtual",
+            "price": 567,
+            "genre": "Afro Pop",
+            "image_url": "http://placeimg.com/640/480",
+            "file_url": "https://kailyn.org",
+            "duration": "00:51",
+            "size": 0,
+            "type": "mp3",
+            "user_id": "01h8e8nycg52axpj85ty4jcrr1",
+            "total_sales": 0,
+            "plays": 0,
+            "views": 13,
+            "likes": 0,
+            "downloads": 0
+        },
+        "producer": {
+            "id": "01h8e8nz80gapv1ck2ts0zysr7",
+            "user_id": "01h8e8nycg52axpj85ty4jcrr1",
+            "total_revenue": 0,
+            "total_sales": 0,
+            "total_beats": 22,
+            "profile_views": 9,
+            "total_beats_sold": 0,
+            "created_at": "2023-08-22T09:19:45.000000Z",
+            "updated_at": "2023-08-22T14:04:10.000000Z"
+        }
+    }
 }
 ```

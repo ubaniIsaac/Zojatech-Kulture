@@ -14,6 +14,7 @@ return new class extends Migration
         //
         Schema::table('producers', function (Blueprint $table) {
             $table->string('wallet_id')->nullable();
+            $table->integer('total_downloads')->default(0);
 
         });
     }

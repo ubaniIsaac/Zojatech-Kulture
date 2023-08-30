@@ -6,6 +6,7 @@ use App\Models\Beat;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 // use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\{BelongsTo, HasMany, HasOne};
 
 class Artiste extends User
@@ -37,10 +38,11 @@ class Artiste extends User
         return $this->belongsTo(User::class);
     }
 
-    // public function favourites(): BelongsToMany
-    // {
-    //     return $this->belongsToMany(Beat::class, 'favourites', 'artiste_id', 'beat_id')
-    //     ->withTimestamps();
-    // }
+    public function favourites(): BelongsToMany
+    {
+        return $this->belongsToMany(Beat::class, 'favourites', 'artiste_id', 'beat_id')
+        ->select('fileUrl', 'imageUrl', 'genre', 'name', 'price', 'id')
+        ->withTimestamps();
+    }
 
 }

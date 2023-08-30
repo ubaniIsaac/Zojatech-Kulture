@@ -3,7 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\CheckOwnership;
-use App\Http\Controllers\api\{AuthController, BeatController, Cartcontroller, FavouriteController, GenreController, PaymentController, ProducerController, SubscriptionController, UserController};
+use App\Http\Controllers\api\{ArtisteController, AuthController, BeatController, Cartcontroller, FavouriteController, GenreController, PaymentController, ProducerController, SubscriptionController, UserController};
 
 /*
 |--------------------------------------------------------------------------
@@ -48,6 +48,10 @@ Route::prefix('v1')->group(function () {
         Route::get('/producers', [ProducerController::class, 'index'])->name('producers.index');
 
         Route::post('/producers/{id}', [ProducerController::class, 'show'])->name('producers.show');
+
+        Route::get('/artistes', [ArtisteController::class, 'index'])->name('artistes.index');
+
+        Route::post('/artistes/{id}', [ArtisteController::class, 'show'])->name('artistes.show');
 
         Route::prefix('trending')->group(function () {
             Route::get('/beats', [BeatController::class, 'trending'])->name('beats.trending');
@@ -138,10 +142,10 @@ Route::prefix('v1')->group(function () {
         });
 
         //Dashboard
-        Route::prefix('dashboard')->group(function () {
-            Route::get('/producer/{id}', [ProducerController::class, 'producerDashboard']);
-            Route::get('/artiste/{id}', [ArtisteController::class, 'artisteDashboard']);
+        // Route::prefix('dashboard')->group(function () {
+        //     Route::get('/producer/{id}', [ProducerController::class, 'producerDashboard']);
+        //     Route::get('/artiste/{id}', [ArtisteController::class, 'artisteDashboard']);
 
-        });
+        // });
     });
 });

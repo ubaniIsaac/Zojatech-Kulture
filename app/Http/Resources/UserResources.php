@@ -26,16 +26,21 @@ class UserResources extends JsonResource
                 'last_name' => $this->last_name,
                 'email' => $this->email,
                 'profile_picture' => $this->profile_picture,
-                'streaming_limit' => $this->streaming_limit,
+                'upload_limit' => $this->upload_limit,
                 'referral_code' => $this->referral_code,
                 'referred_by' => $this->referred_by,
-                'referral_link' => $this->referral_link,
+                'no_of_referrals' => $this->no_of_referrals,
+                'subscription_plan' => $this->subscription_plan,
                 'user_type' => $this->user_type,
                 'created_at' => $this->created_at,
                 'updated_at' => $this->updated_at,
             ],
 
-            'subscription_id' => $this->subscription_id,
+            'referred_by' => $this->referred_by,
+
+            'referrals' => $this->referrals,
+
+            'subscription' => $this->subscription,
         ];
     }
 }

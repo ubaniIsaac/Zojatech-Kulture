@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
-use App\Http\Controllers\api\{AuthController, BeatController, CartController, FavouriteController, GenreController, UserController, ProducerController};
+use App\Http\Controllers\api\{AuthController, BeatController, GenreController, UserController, ProducerController, SubscriptionController, Cartcontroller, PaymentController};
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\CheckOwnership;
 
@@ -18,6 +18,7 @@ use App\Http\Middleware\CheckOwnership;
 
 
 Route::prefix('v1')->group(function () {
+
 
 
     // Declare unauthenticated routes
@@ -54,22 +55,32 @@ Route::prefix('v1')->group(function () {
             Route::get('/genres', [GenreController::class, 'trending'])->name('genres.trending');
         });
     });
-      //Authentication
+    //Authentication
+
+
+
+
+
 
 
     // Declare authenticated routes
     Route::group(['middleware' => 'auth:api'], static function () {
-        Route::prefix('carts')->middleware(['role:artiste'])->group(function(){
-            Route::post('/add/{beat_id}',[Cartcontroller::class, 'add'])->name('add-beat-to-cart');
-            Route::get('/view',[Cartcontroller::class, 'view'])->name('view-all-beats-in-cart');
+
+
+        Route::prefix('carts')->middleware(['role:artiste'])->group(function () {
+            Route::post('/add/{beat_id}', [Cartcontroller::class, 'add'])->name('add-beat-to-cart');
+            Route::get('/view', [Cartcontroller::class, 'view'])->name('view-all-beats-in-cart');
             Route::delete('/{beat_id}', [Cartcontroller::class, 'destroy'])->name('delet-from-cart');
         });
 
         //payment routes
-        Route::post('/pay', [PaymentController::class, 'makePayment']);
-        Route::post('/verifyPayment', [PaymentController::class, 'store']);
-        Route::post('/createRecipient', [PaymentController::class, 'createRecipient']);
-        Route::post('/withdraw', [PaymentController::class, 'initiateWithdrawal']);
+        Route::prefix('payment')->group(function () {
+
+            Route::post('/pay', [PaymentController::class, 'makePayment']);
+            Route::post('/verifyPayment', [PaymentController::class, 'store']);
+            Route::post('/createRecipient', [PaymentController::class, 'createRecipient']);
+            Route::post('/withdraw', [PaymentController::class, 'initiateWithdrawal']);
+        });
 
 
 
@@ -83,6 +94,16 @@ Route::prefix('v1')->group(function () {
                 Route::post('/update', [GenreController::class, 'update'])->name('genre.update');
                 Route::post('/delete', [GenreController::class, 'delete'])->name('genre.delete');
             });
+
+            Route::prefix('subscription')->group(function () {
+                Route::post('/create', [SubscriptionController::class, 'store'])->name('subscription.store');
+
+                Route::get('', [SubscriptionController::class, 'index'])->name('subscription.index');
+
+                Route::post('/{id}', [SubscriptionController::class, 'show'])->name('subscription.show');
+            });
+
+           
         });
 
         //User routes

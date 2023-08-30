@@ -16,7 +16,7 @@ Welcome to the documentation for the Kulture App API. This document provides inf
   - [Trending Genres](#trending-genres)
 
 - [Beats](#beats)
-    -[Fetch Beat by ID](#fetch-beat-by-id)
+    -   [Fetch Beat by ID](#fetch-beat-by-id)
 
 ## Authentication<a name="authentication"></a>
 

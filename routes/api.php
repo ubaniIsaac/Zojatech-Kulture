@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
-use App\Http\Controllers\api\{AuthController, BeatController, CartController, GenreController, UserController, ProducerController};
+use App\Http\Controllers\api\{AuthController, BeatController, CartController, FavouriteController, GenreController, UserController, ProducerController};
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\CheckOwnership;
 
@@ -27,7 +27,7 @@ Route::prefix('v1')->group(function () {
         Route::any('/', function () {
             return response()->json(['message' => 'Welcome to Kulture Api'], 200);
         })->name('welcome');
-
+        // Route::post('/upload', [BeatController::class, 'upload'])->name('beats.upload');
         Route::post('/register', [AuthController::class, 'register'])->name('register');
 
         Route::post('/signin', [AuthController::class, 'signin'])->name('signin');
@@ -111,9 +111,10 @@ Route::prefix('v1')->group(function () {
             Route::get('/beats/{id}', [BeatController::class, 'download'])->name('beats.download');
         });
 
-        //CART
-        Route::prefix('cart')->group(function () {
-            Route::get('/{id}/beats', [CartController::class, 'index']);
+        //favourites
+        Route::prefix('favourites')->group(function () {
+            Route::get('/{id}/beats', [FavouriteController::class, 'index']);
+            Route::post('/{id}', [FavouriteController::class, 'store'])->name('favourite.store');
         });
     });
 });

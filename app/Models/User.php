@@ -5,6 +5,7 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
 use App\Models\Artiste;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Laravel\Passport\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
@@ -13,7 +14,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Support\Arr;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class User extends Authenticatable
 {
@@ -91,5 +92,12 @@ class User extends Authenticatable
     public function guardName(): mixed
     {
         return 'api';
+    }
+
+    public function favourites(): BelongsToMany
+    {
+        return $this->belongsToMany(Beat::class, 'favourites', 'user_id', 'beat_id')
+        ->select('fileUrl', 'imageUrl', 'genre', 'name', 'price', 'id')
+        ->withTimestamps();
     }
 }

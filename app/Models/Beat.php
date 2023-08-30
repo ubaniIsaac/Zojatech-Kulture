@@ -51,7 +51,7 @@ class Beat extends Model
 
     public function favourites(): BelongsToMany
     {
-        return $this->belongsToMany(Artiste::class, 'cart', 'beat_id', 'artiste_id')
+        return $this->belongsToMany(User::class, 'cart', 'beat_id', 'user_id')
         ->withTimestamps();
     }
     

@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class ProducerResources extends JsonResource
+class ArtisteResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -19,16 +19,14 @@ class ProducerResources extends JsonResource
             'type' => 'Producer',
             'data' => $this->user,
             'attributes' => [
-                'total_revenue' => $this->total_revenue,
-                'total_sales' => $this->total_sales,
-                'total_beats' => $this->total_beats,
+                'total_beats_purchased' => $this->beats_purchased,
                 'profile_views' => $this->profile_views,
-                'total_beats_sold' => $this->total_beats_sold,
+                'total_amount_spent' => $this->total_amount_spent,
                 'created_at' => $this->created_at,
 
             ],
-            'purchase_beats' =>  [], 
-            'beats' => $this->beats
+            'purchased_beats' => [],
+            'favourite_beats' => $this->favourites
 
         ];
     }

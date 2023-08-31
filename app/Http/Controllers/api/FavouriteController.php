@@ -74,6 +74,7 @@ class FavouriteController extends Controller
             $authId = auth()->id();
             $artiste = Artiste::where('user_id', $authId)->firstOrFail();
             $beat = Beat::findOrFail($id);
+            
     
             $isExist = $artiste->favourites()->where('beat_id', $beat->id)->exists();
 

@@ -52,6 +52,8 @@ class FavouriteController extends Controller
                 ], 200);
             }
                 $artiste->favourites()->attach($beat->id);
+                $beat->increment('like_count');
+
                 return response()->json([
                     'message' => 'beat added to favourites'
                 ], 200);

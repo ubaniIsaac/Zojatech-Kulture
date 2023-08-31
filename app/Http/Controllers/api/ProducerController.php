@@ -38,6 +38,7 @@ class ProducerController extends Controller
             } else {
                 return $this->errorResponse('User is not a Producer');
             }
+            
 
 
             return $this->successResponse('Producer retrieved successfully', new ProducerResources($producer));

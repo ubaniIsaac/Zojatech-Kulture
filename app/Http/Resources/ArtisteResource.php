@@ -16,7 +16,7 @@ class ArtisteResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'type' => 'Producer',
+            'type' => 'Artiste',
             'data' => $this->user,
             'attributes' => [
                 'total_beats_purchased' => $this->beats_purchased,

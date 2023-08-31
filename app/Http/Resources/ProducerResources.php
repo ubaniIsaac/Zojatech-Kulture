@@ -5,6 +5,10 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
+/**
+ * @mixin \App\Models\Producer
+ */
+
 class ProducerResources extends JsonResource
 {
     /**
@@ -24,11 +28,13 @@ class ProducerResources extends JsonResource
                 'total_beats' => $this->total_beats,
                 'profile_views' => $this->profile_views,
                 'total_beats_sold' => $this->total_beats_sold,
+                'total_downloads' => $this->total_downloads,
                 'created_at' => $this->created_at,
 
             ],
-            'purchase_beats' =>  [], 
-            'beats' => $this->beats
+            'beats_liked_by_artistes' => $this->likedBeats,
+            'uploaded_beats' => $this->beats,
+            
 
         ];
     }

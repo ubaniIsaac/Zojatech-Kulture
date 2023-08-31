@@ -19,8 +19,8 @@ class FavouriteController extends Controller
     public function index(Request $request, string $id)
     {
         $auth = auth()->id();
-        $user = User::find($auth);
-        $favourites = $user->favourites;
+        $artiste = Artiste::where('user_id', $auth)->first();
+        $favourites = $artiste->favourites;
          
         return response()->json([
             'message' => 'favourites displayed successfully',
@@ -60,7 +60,7 @@ class FavouriteController extends Controller
         } catch (\Throwable $th) {
             return response()->json([
                 'error' => 'error adding beat to favourites'
-            ], 403);
+            ], 500);
         }
         
     }
@@ -68,29 +68,35 @@ class FavouriteController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-
     public function delete(Request $request, string $id): JsonResponse
     {
-       
         try {
-            $auth = auth()->id();
-            $user = User::find($auth);
-            $beat = Beat::find($id);
-            
-            $isExist = $user->favourites->contains($beat->id);
-
-            if($isExist) {
-             $user->favourites()->detach($beat->id);
-
-            }
+            $authId = auth()->id();
+            $artiste = Artiste::where('user_id', $authId)->firstOrFail();
+            $beat = Beat::findOrFail($id);
+            echo $beat;
+    
+            $isExist = $artiste->favourites()->where('beat_id', $beat->id)->exists();
+            echo $isExist;
+            if ($isExist) {
+                $artiste->favourites()->detach($beat->id);
+                $beat->decrement('like_count');
+    
                 return response()->json([
                     'message' => 'Beat removed from favorites.'
                 ], 200);
-
+            }
+    
+            return response()->json([
+                'message' => 'Beat was not in favorites.'
+            ], 200);
+    
         } catch (\Throwable $th) {
             return response()->json([
-                'error' => 'error occurred while removing beat from favourites.'
-            ], 200);
+                'error' => 'An error occurred while removing the beat from favorites.'
+            ], 500);
         }
     }
+    
+    
 }

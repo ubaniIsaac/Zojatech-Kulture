@@ -19,9 +19,9 @@ class FavouriteResource extends JsonResource
             'id' =>strval($this->id),
             'name' => $this->name,
             'genre' => $this->genre,
-            'imageUrl' => json_decode($this->imageUrl),
+            'imageUrl' => $this->imageUrl,
             'price' => $this->price,
-            'fileUrl' => json_decode($this->fileUrl)
+            'fileUrl' => $this->fileUrl
         ];
     }
 }

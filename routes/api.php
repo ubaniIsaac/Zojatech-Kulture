@@ -140,12 +140,5 @@ Route::prefix('v1')->group(function () {
             Route::post('/{id}', [FavouriteController::class, 'store'])->name('favourite.store');
             Route::delete('/{id}', [FavouriteController::class, 'delete'])->name('favourite.delete');
         });
-
-        //Dashboard
-        // Route::prefix('dashboard')->group(function () {
-        //     Route::get('/producer/{id}', [ProducerController::class, 'producerDashboard']);
-        //     Route::get('/artiste/{id}', [ArtisteController::class, 'artisteDashboard']);
-
-        // });
     });
 });

@@ -42,11 +42,11 @@ Route::prefix('v1')->group(function () {
 
         Route::get('/beats', [BeatController::class, 'index'])->name('beats.index');
 
-        Route::post('users/{id}', [UserController::class, 'show'])->name('show-user');
+        Route::get('users/{id}', [UserController::class, 'show'])->name('show-user');
 
         Route::get('/producers', [ProducerController::class, 'index'])->name('producers.index');
 
-        Route::post('/producers/{id}', [ProducerController::class, 'show'])->name('producers.show');
+        Route::get('/producers/{id}', [ProducerController::class, 'show'])->name('producers.show');
 
         Route::prefix('trending')->group(function () {
             Route::get('/beats', [BeatController::class, 'trending'])->name('beats.trending');

@@ -47,11 +47,11 @@ Route::prefix('v1')->group(function () {
 
         Route::get('/producers', [ProducerController::class, 'index'])->name('producers.index');
 
-        Route::post('/producers/{id}', [ProducerController::class, 'show'])->name('producers.show');
+        Route::get('/producers/{id}', [ProducerController::class, 'show'])->name('producers.show');
 
         Route::get('/artistes', [ArtisteController::class, 'index'])->name('artistes.index');
 
-        Route::post('/artistes/{id}', [ArtisteController::class, 'show'])->name('artistes.show');
+        Route::get('/artistes/{id}', [ArtisteController::class, 'show'])->name('artistes.show');
 
         Route::prefix('trending')->group(function () {
             Route::get('/beats', [BeatController::class, 'trending'])->name('beats.trending');
@@ -111,6 +111,7 @@ Route::prefix('v1')->group(function () {
         //User routes
         Route::group(['prefix' => 'users'],  static function () {
             Route::get('/', [UserController::class, 'index'])->name('get-users');
+            Route::get('/{id}', [UserController::class, 'show'])->name('get-one-users');
 
 
             Route::group(['middleware' => 'isOwner:user'], function () {

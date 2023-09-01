@@ -27,6 +27,15 @@ class Beat extends Model
         'producer_id',
     ];
 
+
+     // Hide the pivot table
+    /**
+     * The attributes that should be hidden for serialization.
+     *
+     * @var array<int, string>
+     */
+    protected $hidden = ['pivot'];
+
     /**
      * Get the genre associated with the beat.
      * 

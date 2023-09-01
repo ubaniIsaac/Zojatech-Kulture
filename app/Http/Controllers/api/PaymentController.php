@@ -81,6 +81,7 @@ class PaymentController extends Controller
                         $beat->producer->increment('total_beats_sold');
                         $beat->increment('total_sales');
                         $cart->user->artistes->increment('beats_purchased');
+                        $cart->user->artistes->total_amount_spent += $beat->price;
                         $beat->save();          
                         $beat->producer->save();          
                     }

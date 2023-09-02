@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
-use App\Http\Controllers\api\{AuthController, BeatController, GenreController, UserController, ProducerController};
+use App\Http\Controllers\api\{AuthController, BeatController, GenreController, UserController, ProducerController, LicenseController};
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\CheckOwnership;
 
@@ -36,7 +36,7 @@ Route::prefix('v1')->group(function () {
 
         Route::get('/genre', [GenreController::class, 'index'])->name('genre.index');
 
-        Route::post('/genre/{id}', [GenreController::class, 'show'])->name('genre.show');
+        Route::get('/genre/{id}', [GenreController::class, 'show'])->name('genre.show');
 
         Route::get('/beats/{id}', [BeatController::class, 'show'])->name('beats.show');
 
@@ -53,6 +53,8 @@ Route::prefix('v1')->group(function () {
             Route::get('/producers', [ProducerController::class, 'trendingProducers'])->name('producers.trending');
             Route::get('/genres', [GenreController::class, 'trending'])->name('genres.trending');
         });
+
+     
     });
 
 
@@ -63,9 +65,15 @@ Route::prefix('v1')->group(function () {
         //Admin routes
         Route::prefix('admin')->group(function () {
 
+            Route::prefix('license')->group(function () {
+                Route::get('/', [LicenseController::class, 'index'])->name('license.index');
+                // Route::get('/{id}', [LicenseController::class, 'show'])->name('license.show');
+                Route::post('/create', [LicenseController::class, 'store'])->name('license.store');
+    
+            });
+
             //Admin- Genre routes
             Route::prefix('genre')->group(function () {
-
                 Route::post('/create', [GenreController::class, 'store'])->name('genre.store');
                 Route::post('/update', [GenreController::class, 'update'])->name('genre.update');
                 Route::post('/delete', [GenreController::class, 'delete'])->name('genre.delete');

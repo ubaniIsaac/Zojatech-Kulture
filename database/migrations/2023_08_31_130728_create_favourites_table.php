@@ -11,12 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('favourites', function (Blueprint $table) {
-            $table->foreignUlid('artiste_id')->references('id')->on('artistes')->onDelete('cascade');
-            $table->foreignUlid('beat_id')->references('id')->on('beats')->onDelete('cascade');
-            $table->unique(['artiste_id', 'beat_id']);
-            $table->timestamps();
-        });
+        // Schema::create('favourites', function (Blueprint $table) {
+        //     $table->foreignUlid('artiste_id')->references('id')->on('artistes')->onDelete('cascade');
+        //     $table->foreignUlid('beat_id')->references('id')->on('beats')->onDelete('cascade');
+        //     $table->unique(['artiste_id', 'beat_id']);
+        //     $table->timestamps();
+        // });
     }
 
     /**

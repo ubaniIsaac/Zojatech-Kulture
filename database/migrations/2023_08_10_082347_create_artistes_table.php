@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('artistes', function (Blueprint $table) {
-            $table->ulid('id');
-            $table->ulid('user_id')->primary()->uniqid();
+            $table->ulid('id')->primary()->uniqid();
+            $table->ulid('user_id');
             $table->integer('beats_purchased')->default('0');
             $table->integer('profile_views')->default('0');       
             $table->timestamps();

@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::table('artistes', function (Blueprint $table) {
             $table->integer('total_amount_spent')->default('0');
+          
 
         });
     }
@@ -22,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        //
+           
     }
 };

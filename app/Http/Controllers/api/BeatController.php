@@ -73,7 +73,7 @@ class BeatController extends Controller
                     'fileUrl' => $audioUrl,
                     'user_id' => $userId,
                     'producer_id' => $producer->id,
-                    'genre_id' => $genreId
+                    'genre_id' => $genreId, 
                 ]
             ));
 

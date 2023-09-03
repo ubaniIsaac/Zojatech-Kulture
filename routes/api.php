@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
-use App\Http\Controllers\api\{ArtisteController, AuthController, BeatController, GenreController, UserController, ProducerController, LicenseController};
+use App\Http\Controllers\api\{ArtisteController, AuthController, BeatController, FavouriteController, GenreController, UserController, ProducerController, LicenseController};
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\CheckOwnership;
 
@@ -85,7 +85,7 @@ Route::prefix('v1')->group(function () {
         });
 
         //User routes
-        Route::group(['prefix' => 'users'],  static function () {
+            Route::prefix('users')->group(function () {
             Route::get('/', [UserController::class, 'index'])->name('get-users');
 
 
@@ -109,5 +109,12 @@ Route::prefix('v1')->group(function () {
         Route::prefix('downloads')->group(function () {
             Route::get('/beats/{id}', [BeatController::class, 'download'])->name('beats.download');
         });
+
+        Route::prefix('favourites')->group(function () {
+            Route::post('/{id}', [FavouriteController::class, 'store'])->name('favourite.store');
+            Route::get('/{id}/beats', [FavouriteController::class, 'index'])->name('favourite.index');
+            Route::delete('/{id}', [FavouriteController::class, 'delete'])->name('favourite.delete');
+        });
+        
     });
 });

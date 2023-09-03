@@ -44,6 +44,7 @@ class ProducerController extends Controller
                 'data' => new ProducerResources($producer)
             ]);
         } catch (\Throwable $th) {
+            // return response()->json(['exception' => $th->getMessage()]);
             return $this->errorResponse('User not found');
         }
     }

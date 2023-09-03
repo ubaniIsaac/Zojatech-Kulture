@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
-use App\Http\Controllers\api\{AuthController, BeatController, GenreController, UserController, ProducerController, LicenseController};
+use App\Http\Controllers\api\{ArtisteController, AuthController, BeatController, GenreController, UserController, ProducerController, LicenseController};
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\CheckOwnership;
 
@@ -47,6 +47,10 @@ Route::prefix('v1')->group(function () {
         Route::get('/producers', [ProducerController::class, 'index'])->name('producers.index');
 
         Route::get('/producers/{id}', [ProducerController::class, 'show'])->name('producers.show');
+
+        Route::get('/artistes', [ArtisteController::class, 'index'])->name('artistess.index');
+
+        Route::get('/artistes/{id}', [ArtisteController::class, 'show'])->name('artistes.show');
 
         Route::prefix('trending')->group(function () {
             Route::get('/beats', [BeatController::class, 'trending'])->name('beats.trending');

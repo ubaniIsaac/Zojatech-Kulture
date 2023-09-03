@@ -32,7 +32,7 @@ class ProducerResources extends JsonResource
                 'created_at' => $this->created_at,
 
             ],
-            // 'beats_liked_by_artistes' => $this->likedBeats,
+            'beats_liked_by_artistes' => $this->likedBeats,
             'uploaded_beats' => $this->beats,
             
 

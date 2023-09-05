@@ -18,7 +18,10 @@ class Cartcontroller extends Controller
         $beat = Beat::findOrFail($request->beat_id);
         $cart = Cart::where('user_id', auth()->user()->id)->first();
 
-    
+        if(!$cart) {     
+            $cart = Cart::create(['user_id' => auth()->user()->id, 'items' => []]);
+        }
+
         if (in_array($beat->id, $cart->items)) {
             return response()->json(
                 [

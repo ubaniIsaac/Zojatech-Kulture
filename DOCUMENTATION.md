@@ -35,7 +35,7 @@ Request Body:
   "username": "required | unique",
   "first_name": " required | unique",
   "last_name": " required | unique",
-  "email": "reequired | unique",
+  "email": "required | unique",
   "profile_profile": "required| mimes:jpeg,png,jpg,gif,svg|max:2048",
   "password": "required| min:8",
   "confirm_password": "required| min:8",

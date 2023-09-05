@@ -11,11 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        //
-        Schema::table('producers', function (Blueprint $table) {
-            $table->string('wallet_id')->nullable();
-            $table->integer('total_downloads')->default(0);
-
+        Schema::create('favourites', function (Blueprint $table) {
+            $table->foreignUlid('artiste_id')->references('id')->on('artistes')->onDelete('cascade');
+            $table->foreignUlid('beat_id')->references('id')->on('beats')->onDelete('cascade');
+            $table->unique(['artiste_id', 'beat_id']);
+            $table->timestamps();
         });
     }
 
@@ -24,9 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('producers', function (Blueprint $table) {
-            $table->dropColumn('total_sales');
-        });
-        
+        //
     }
 };

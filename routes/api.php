@@ -1,9 +1,9 @@
 <?php
 
 use Illuminate\Http\Request;
-use App\Http\Controllers\api\{AuthController, BeatController, GenreController, UserController, ProducerController, SubscriptionController, Cartcontroller, PaymentController};
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\CheckOwnership;
+use App\Http\Controllers\api\{ArtisteController, AuthController, BeatController, Cartcontroller, FavouriteController, GenreController, PaymentController, ProducerController, SubscriptionController, UserController};
 
 /*
 |--------------------------------------------------------------------------
@@ -28,7 +28,7 @@ Route::prefix('v1')->group(function () {
         Route::any('/', function () {
             return response()->json(['message' => 'Welcome to Kulture Api'], 200);
         })->name('welcome');
-
+        // Route::post('/upload', [BeatController::class, 'upload'])->name('beats.upload');
         Route::post('/register', [AuthController::class, 'register'])->name('register');
 
         Route::post('/signin', [AuthController::class, 'signin'])->name('signin');
@@ -48,6 +48,10 @@ Route::prefix('v1')->group(function () {
         Route::get('/producers', [ProducerController::class, 'index'])->name('producers.index');
 
         Route::post('/producers/{id}', [ProducerController::class, 'show'])->name('producers.show');
+
+        Route::get('/artistes', [ArtisteController::class, 'index'])->name('artistes.index');
+
+        Route::post('/artistes/{id}', [ArtisteController::class, 'show'])->name('artistes.show');
 
         Route::prefix('trending')->group(function () {
             Route::get('/beats', [BeatController::class, 'trending'])->name('beats.trending');
@@ -127,6 +131,13 @@ Route::prefix('v1')->group(function () {
 
         Route::prefix('downloads')->group(function () {
             Route::get('/beats/{id}', [BeatController::class, 'download'])->name('beats.download');
+        });
+
+        //favourites
+        Route::prefix('favourites')->group(function () {
+            Route::get('/{id}/beats', [FavouriteController::class, 'index']);
+            Route::post('/{id}', [FavouriteController::class, 'store'])->name('favourite.store');
+            Route::delete('/{id}', [FavouriteController::class, 'delete'])->name('favourite.delete');
         });
     });
 });

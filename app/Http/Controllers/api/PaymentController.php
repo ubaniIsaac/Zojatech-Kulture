@@ -29,20 +29,21 @@ class PaymentController extends Controller
     }
 
 
-    public function makePayment(PaymentRequest $request): JsonResponse
+    public function makePayment(Request $request): JsonResponse
     {
         $user = auth()->user();
+        // dd($user->cart);
         $ref = uniqid();
-        $cart = Cart::findorfail($request->cart_id);
+        $cart = Cart::where('user_id', $user->id)->first();
         if(count($cart->items)== 0){
             return $this->errorResponse('Nothing in cart');
         }
         $data = [
-            'amount' => $cart->total_price,
+            'amount' => $user->cart->total_price,
             'email' => $user?->email,
             'user_id' => $user?->id,
-            'cart_id' => $request->cart_id,
-            'cart_items' => $cart->items,
+            'cart_id' => $cart->id,
+            'cart_items' => $user->cart->items,
             'reference' => $ref,
             'callback_url' => route('verifyTransaction')
         ];
@@ -81,6 +82,7 @@ class PaymentController extends Controller
                         $beat->producer->total_revenue += $beat->price;
                         $beat->producer->increment('total_beats_sold');
                         $beat->increment('total_sales');
+                        $beat->decrement('available_copies');
                         $cart->user->artistes->increment('beats_purchased');
                         $cart->user->artistes->total_amount_spent += $beat->price;
                         $beat->save();          

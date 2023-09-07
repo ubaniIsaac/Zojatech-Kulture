@@ -40,6 +40,12 @@ class Artiste extends User
         return $this->belongsTo(User::class);
     }
 
+    /**
+     * Get the beats for the artiste.
+     * 
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\Beat>
+     */
+
     public function favourites(): BelongsToMany
     {
         return $this->belongsToMany(Beat::class, 'favourites')

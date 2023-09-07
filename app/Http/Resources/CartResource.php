@@ -42,9 +42,14 @@ class CartResource extends JsonResource
                     'price' => $beat->price,
                     'genre' => $beat->genre,
                     'image_url' => $beat->imageUrl,
-                ])  ;
+                    'beat_license' => $beat->license_type,
+                    'avaliable_copies' => $beat->available_copies,
+                    'owner_id' => $beat->user_id,
+                    'beat_size' => $beat->size,
+                    'total_sales' => $beat->total_sales,
+                ]);
             }
         }
-         return $beats;
+        return $beats;
     }
 }

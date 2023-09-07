@@ -88,4 +88,9 @@ class User extends Authenticatable
         return $this->hasOne(Artiste::class);
     }
 
+
+    public function cart(): HasOne
+    {
+        return $this->hasOne(Cart::class);
+    }
 }

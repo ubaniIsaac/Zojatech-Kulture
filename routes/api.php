@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
-use App\Http\Controllers\api\{ArtisteController, AuthController, BeatController, GenreController, UserController, ProducerController, LicenseController};
+use App\Http\Controllers\api\{ArtisteController, AuthController, BeatController, Cartcontroller, FavouriteController, GenreController, UserController, ProducerController, LicenseController, PaymentController};
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\CheckOwnership;
 
@@ -66,6 +66,23 @@ Route::prefix('v1')->group(function () {
     // Declare authenticated routes
     Route::group(['middleware' => 'auth:api'], static function () {
 
+         //Carts routes
+         Route::prefix('carts')->middleware(['role:artiste'])->group(function(){
+            Route::post('/add/{beat_id}',[Cartcontroller::class, 'add'])->name('add-beat-to-cart');
+            Route::get('/view',[Cartcontroller::class, 'view'])->name('view-all-beats-in-cart');
+            Route::delete('/remove/{beat_id}', [Cartcontroller::class, 'destroy'])->name('delete-from-cart');
+        });
+
+        //payment routes
+        Route::prefix('payment')->middleware(['role:artiste'])->group(function () {
+            Route::post('/pay', [PaymentController::class, 'makePayment'])->name('initiatePayment');
+            Route::get('/verifyPayment', [PaymentController::class, 'verifyPayment'])->name('verifyTransaction');
+            Route::post('/createRecipient', [PaymentController::class, 'createRecipient'])->name('createRecipient');
+        });
+        
+        Route::post('/payment/withdraw',  [PaymentController::class, 'initiateWithdrawal'])->middleware(['role:producer'])->name('initiatewithdrawal');
+
+
         //Admin routes
         Route::prefix('admin')->group(function () {
 
@@ -85,7 +102,7 @@ Route::prefix('v1')->group(function () {
         });
 
         //User routes
-        Route::group(['prefix' => 'users'],  static function () {
+            Route::prefix('users')->group(function () {
             Route::get('/', [UserController::class, 'index'])->name('get-users');
 
 
@@ -109,5 +126,12 @@ Route::prefix('v1')->group(function () {
         Route::prefix('downloads')->group(function () {
             Route::get('/beats/{id}', [BeatController::class, 'download'])->name('beats.download');
         });
+
+        Route::prefix('favourites')->group(function () {
+            Route::post('/{id}', [FavouriteController::class, 'store'])->name('favourite.store');
+            Route::get('/{id}/beats', [FavouriteController::class, 'index'])->name('favourite.index');
+            Route::delete('/{id}', [FavouriteController::class, 'delete'])->name('favourite.delete');
+        });
+        
     });
 });

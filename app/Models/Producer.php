@@ -45,7 +45,13 @@ class Producer extends User
         return $this->hasMany(Beat::class);
     }
 
-    public function likedBeats()
+    /**
+     * Get the beats liked by the producer.
+     * 
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\Beat>
+     */
+
+    public function likedBeats(): HasMany
     {
         return $this->hasMany(Beat::class)
             ->whereHas('favourites'); 

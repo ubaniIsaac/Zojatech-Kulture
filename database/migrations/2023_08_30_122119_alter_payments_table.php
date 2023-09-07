@@ -11,10 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('artistes', function (Blueprint $table) {
-            $table->integer('total_amount_spent')->default('0');
-          
-
+        Schema::table('payments', function (Blueprint $table) {
+            $table->json('cart_items')->nullable();
         });
     }
 
@@ -23,6 +21,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-           
+        //
     }
 };

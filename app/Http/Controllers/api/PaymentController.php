@@ -4,6 +4,7 @@ namespace App\Http\Controllers\api;
 
 use App\Http\Requests\PaymentRequest;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\UserResources;
 use App\Models\Beat;
 use App\Models\Payment;
 use App\Models\Producer;
@@ -32,10 +33,11 @@ class PaymentController extends Controller
     public function makePayment(Request $request): JsonResponse
     {
         $user = auth()->user();
-        // dd($user->cart);
+        // $url = ($_SERVER['HTTP_HOST'])."/verify-payment";
+        // dd($request->root()."/verify-payment");
         $ref = uniqid();
         $cart = Cart::where('user_id', $user->id)->first();
-        if(count($cart->items)== 0){
+        if (count($cart->items) == 0) {
             return $this->errorResponse('Nothing in cart');
         }
         $data = [
@@ -45,7 +47,7 @@ class PaymentController extends Controller
             'cart_id' => $cart->id,
             'cart_items' => $user->cart->items,
             'reference' => $ref,
-            'callback_url' => route('verifyTransaction')
+            'callback_url' => $request->root() . "/verify-payment"
         ];
 
         Payment::create(Arr::except($data, ['callback_url', 'email']));
@@ -59,7 +61,7 @@ class PaymentController extends Controller
     {
         try {
             $response =  $this->paymentService->verifyPayment($request->reference);
-            $user =auth()->user(); 
+            $user = User::findorfail(auth()->user()->id);
 
             if ($response['status'] == true) {
                 $payment = Payment::where('reference', $request->reference)->first();
@@ -75,32 +77,34 @@ class PaymentController extends Controller
                 $payment?->save();
 
                 // disburse funds / update all producers' wallet / update Admin wallet. 
-                    $cart = Cart::findorfail($payment->cart_id);
-                    foreach($cart->items as $item){
-                        //update beat details. 
-                        $beat = Beat::findorfail($item);
-                        $beat->producer->total_revenue += $beat->price;
-                        $beat->producer->increment('total_beats_sold');
-                        $beat->increment('total_sales');
-                        $beat->decrement('available_copies');
-                        $cart->user->artistes->increment('beats_purchased');
-                        $cart->user->artistes->total_amount_spent += $beat->price;
-                        $beat->save();          
-                        $beat->producer->save();          
-                    }
+                $cart = Cart::findorfail($payment->cart_id);
+                foreach ($cart->items as $item) {
+                    //update beat details. 
+                    $beat = Beat::findorfail($item);
+                    $beat->producer->total_revenue += $beat->price;
+                    $beat->producer->increment('total_beats_sold');
+                    $beat->increment('total_sales');
+                    $beat->decrement('available_copies');
+                    $cart->user->artistes->increment('beats_purchased');
+                    $cart->user->artistes->total_amount_spent += $beat->price;
+                    $beat->save();
+                    $beat->producer->save();
+                }
 
-                    //todo: update access. 
-                    //todo: send Notification. 
+                //empty cart
+                $cart->update(['items' => [], 'total_price' => 0]);
+                $token = $user->generateToken();
+                $token = $user->createToken($user->email, [$user->user_type])->accessToken;
 
-                    //empty cart
-                    $cart->update(['items' => [], 'total_price' => 0]);
-                    
-                    
-                    return $this->successResponse('Payment Successful', $payment);
+                return $this->successResponse('Payment Successful', [
+                    'token' => $token,
+                    'user' => new UserResources($user),
+                    'status' => "successful"
+                ]);
             }
         } catch (\Throwable $th) {
             return response()->json([
-                "message" => $th,
+                "message" => $th->getMessage(),
                 'status' => 302
             ], 302);
         }

@@ -52,6 +52,8 @@ Route::prefix('v1')->group(function () {
 
         Route::get('/artistes/{id}', [ArtisteController::class, 'show'])->name('artistes.show');
 
+        Route::get('/verifyPayment', [PaymentController::class, 'verifyPayment'])->name('verifyTransaction');
+
         Route::prefix('trending')->group(function () {
             Route::get('/beats', [BeatController::class, 'trending'])->name('beats.trending');
             Route::get('/producers', [ProducerController::class, 'trendingProducers'])->name('producers.trending');
@@ -76,7 +78,6 @@ Route::prefix('v1')->group(function () {
         //payment routes
         Route::prefix('payment')->middleware(['role:artiste'])->group(function () {
             Route::post('/pay', [PaymentController::class, 'makePayment'])->name('initiatePayment');
-            Route::get('/verifyPayment', [PaymentController::class, 'verifyPayment'])->name('verifyTransaction');
             Route::post('/createRecipient', [PaymentController::class, 'createRecipient'])->name('createRecipient');
         });
         

@@ -33,8 +33,6 @@ class PaymentController extends Controller
     public function makePayment(Request $request): JsonResponse
     {
         $user = auth()->user();
-        // $url = ($_SERVER['HTTP_HOST'])."/verify-payment";
-        // dd($request->root()."/verify-payment");
         $ref = uniqid();
         $cart = Cart::where('user_id', $user->id)->first();
         if (count($cart->items) == 0) {
@@ -47,7 +45,7 @@ class PaymentController extends Controller
             'cart_id' => $cart->id,
             'cart_items' => $user->cart->items,
             'reference' => $ref,
-            'callback_url' => $request->root() . "/verify-payment"
+            'callback_url' => $request->baseUrl."/verify-payment"
         ];
 
         Payment::create(Arr::except($data, ['callback_url', 'email']));

@@ -47,8 +47,10 @@ class PaymentController extends Controller
             'cart_id' => $cart->id,
             'cart_items' => $user->cart->items,
             'reference' => $ref,
-            'callback_url' => $request->root() . "/verify-payment"
+            'callback_url' => $request->baseUrl."/verify-payment"
         ];
+
+        dd($data);
 
         Payment::create(Arr::except($data, ['callback_url', 'email']));
 

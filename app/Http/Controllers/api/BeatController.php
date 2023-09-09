@@ -21,12 +21,16 @@ class BeatController extends Controller
     use ResponseTrait;
     public function index(): JsonResponse
     {
-        //
-        $beats = Beat::all();
+        // Default status is 'available'
+        $status = request()->query('status', 'available');
 
-        $beats = Beat::latest()->paginate(10)->through(fn ($beat) => new BeatResources($beat));
+     
+        // Query the "Beat" model to filter results by the "status" value
+        $beats = Beat::where('status', $status)->latest()->paginate(10)->through(fn ($beat) => new BeatResources($beat));
+
         return $this->successResponse('Beats retrieved successfully', $beats);
     }
+
 
 
     public function upload(UploadBeatRequest $request): JsonResponse
@@ -73,7 +77,7 @@ class BeatController extends Controller
                     'fileUrl' => $audioUrl,
                     'user_id' => $userId,
                     'producer_id' => $producer->id,
-                    'genre_id' => $genreId, 
+                    'genre_id' => $genreId,
                 ]
             ));
 
@@ -138,7 +142,6 @@ class BeatController extends Controller
         try {
             $beats = Beat::orderBy('view_count', 'desc')->paginate(5)->through(fn ($beat) => new BeatResources($beat));
             return $this->successResponse('Trending Beats retrieved successfully', $beats);
-
         } catch (\Throwable $th) {
             return $this->errorResponse('Trending beats not found');
         }

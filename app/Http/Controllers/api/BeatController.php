@@ -183,4 +183,35 @@ class BeatController extends Controller
             return $this->errorResponse($th->getMessage());
         }
     }
+
+    //search 
+    public function searchByTitle(Request $request): JsonResponse
+    {
+        $keyword = $request->input('keyword');
+
+        $beats = Beat::where('title', 'like', '%' . $keyword . '%')->get();
+
+        return response()->json(['beats' => $beats], 200);
+    }
+
+    //filter by price
+    public function filterByPrice(Request $request): JsonResponse
+    {
+        $minPrice = $request->input('min_price');
+        $maxPrice = $request->input('max_price');
+
+        $beats = Beat::whereBetween('price', [$minPrice, $maxPrice])->get();
+
+        return response()->json(['beats' => $beats], 200);
+    }
+
+    //filter by genre
+    public function filterByGenre(Request $request): JsonResponse
+    {
+        $genre = $request->input('genre');
+        $beats = Beat::where('genre', $genre)->get();
+
+        return response()->json(['beats' => $beats]);
+    }
 }
+

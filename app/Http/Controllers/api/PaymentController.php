@@ -45,7 +45,7 @@ class PaymentController extends Controller
             'cart_id' => $cart->id,
             'cart_items' => $user->cart->items,
             'reference' => $ref,
-            'callback_url' => $request->baseUrl."/verify-payment"
+            'callback_url' => $request->baseUrl . "/verify-payment"
         ];
 
         Payment::create(Arr::except($data, ['callback_url', 'email']));
@@ -59,10 +59,11 @@ class PaymentController extends Controller
     {
         try {
             $response =  $this->paymentService->verifyPayment($request->reference);
-            $user = User::findorfail(auth()->user()->id);
-
+            
             if ($response['status'] == true) {
                 $payment = Payment::where('reference', $request->reference)->first();
+                $user = $payment->user;
+
 
                 if ($payment?->status == 'successful') {
                     return response()->json([

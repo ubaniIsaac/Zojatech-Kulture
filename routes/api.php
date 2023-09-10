@@ -133,6 +133,17 @@ Route::prefix('v1')->group(function () {
             Route::get('/{id}/beats', [FavouriteController::class, 'index'])->name('favourite.index');
             Route::delete('/{id}', [FavouriteController::class, 'delete'])->name('favourite.delete');
         });
+
+        //beats search route
+        Route::get('/beats/search', [BeatController::class, 'searchByTitle'])->name('beats.search');
+
+        //beats filter by price
+        Route::get('/beats/filter-by-price', [BeatController::class, 'filterByPrice'])->name('beats.filterByPrice');
+
+        //beats filter by genre
+        Route::get('/beats/filter', [BeatController::class, 'filterByGenre'])->name('beats.filter');
+
+
         
     });
 });

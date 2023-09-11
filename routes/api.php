@@ -60,6 +60,19 @@ Route::prefix('v1')->group(function () {
             Route::get('/genres', [GenreController::class, 'trending'])->name('genres.trending');
         });
 
+        //beats search route
+        Route::get('/beats/search', [BeatController::class, 'searchByTitle'])->name('beats.search');
+
+        //beats filter by price
+        Route::get('/beats/filter-by-price', [BeatController::class, 'filterByPrice'])->name('beats.filterByPrice');
+
+        //beats filter by genre
+        Route::get('/beats/filter', [BeatController::class, 'filterByGenre'])->name('beats.filter');
+
+        //save for later
+        Route::post('beats/{beat}/save-for-later', [SaveForLaterController::class, 'saveBeatForLater'])->name('beats.save-for-later');
+
+
      
     });
 
@@ -134,16 +147,11 @@ Route::prefix('v1')->group(function () {
             Route::delete('/{id}', [FavouriteController::class, 'delete'])->name('favourite.delete');
         });
 
-        //beats search route
-        Route::get('/beats/search', [BeatController::class, 'searchByTitle'])->name('beats.search');
-
-        //beats filter by price
-        Route::get('/beats/filter-by-price', [BeatController::class, 'filterByPrice'])->name('beats.filterByPrice');
-
-        //beats filter by genre
-        Route::get('/beats/filter', [BeatController::class, 'filterByGenre'])->name('beats.filter');
+        
 
 
         
     });
+
+    
 });

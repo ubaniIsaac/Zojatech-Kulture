@@ -93,4 +93,10 @@ class User extends Authenticatable
     {
         return $this->hasOne(Cart::class);
     }
+
+    public function savedBeats()
+    {
+        return $this->belongsToMany(Beat::class, 'save_for_later', 'user_id', 'beat_id');
+    }
+
 }

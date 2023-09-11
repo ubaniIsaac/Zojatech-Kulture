@@ -143,6 +143,10 @@ Route::prefix('v1')->group(function () {
         //beats filter by genre
         Route::get('/beats/filter', [BeatController::class, 'filterByGenre'])->name('beats.filter');
 
+        //save for later
+        Route::post('beats/{beat}/save-for-later', [SaveForLaterController::class, 'saveBeatForLater'])->name('beats.save-for-later');
+
+
 
         
     });

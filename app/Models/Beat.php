@@ -71,4 +71,10 @@ class Beat extends Model
         return $this->belongsToMany(Artiste::class, 'favourites', 'beat_id', 'artiste_id')
             ->withTimestamps();
     }
+
+    public function savedByUsers()
+    {
+        return $this->belongsToMany(User::class, 'save_for_later', 'beat_id', 'user_id');
+    }
+
 }

@@ -43,7 +43,7 @@ class BeatSavedForLater extends Notification
         return [
             'message' => "Your beat '{$this->beat->title}' was saved by '{$this->username}'.",
             'beat_id' => $this->beat->id,
-            'user_name' => $this->userName,
+            'user_name' => $this->username,
         ];
     }
 

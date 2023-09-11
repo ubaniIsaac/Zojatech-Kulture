@@ -68,7 +68,7 @@ class AuthController extends Controller
 
          //Get user device details
          $userDevice = $request;
-         dd($userDevice);
+         echo $userDevice;
 
         return $this->successResponse('User logged in successfully', [
             'token' => $token,

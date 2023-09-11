@@ -64,8 +64,11 @@ class AuthController extends Controller
         }
 
         $token = $user->generateToken();
-
         $token = $user->createToken($user->email, [$user->user_type])->accessToken;
+
+         //Get user device details
+         $userDevice = $request;
+         dd($userDevice);
 
         return $this->successResponse('User logged in successfully', [
             'token' => $token,

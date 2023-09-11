@@ -65,7 +65,7 @@ class AuthController extends Controller
 
         $token = $user->generateToken();
         $token = $user->createToken($user->email, [$user->user_type])->accessToken;
-
+        echo "Logginng in .........."
 
         return $this->successResponse('User logged in successfully', [
             'token' => $token,

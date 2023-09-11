@@ -185,13 +185,40 @@ class BeatController extends Controller
     }
 
     //search 
-    public function searchByTitle(Request $request): JsonResponse
+    // public function searchByTitle(Request $request): JsonResponse
+    // {
+    //     $keyword = $request->input('keyword');
+
+    //     $beats = Beat::where('name', 'like', '%' . $keyword . '%')->get();
+
+    //     return response()->json(['beats' => $beats], 200);
+    // }
+
+    public function searchByTitle(Request $request) 
     {
-        $keyword = $request->input('keyword');
+        $beat = Beat::query();
 
-        $beats = Beat::where('name', 'like', '%' . $keyword . '%')->get();
+        if ($request->has('name')) {
+            $name = $request->input('name');
+            $beat->where('name', 'like', '%' .$name. '%');
+        }
 
-        return response()->json(['beats' => $beats], 200);
+        if ($request->has('genre_id')) {
+            $genre = $request->input('genre_id');
+            $beat->where('genre_id', 'like', '%' .$genre. '%');
+        }
+
+        if ($request->has('type')) {
+            $type = $request->input('type');
+            $beat->where('type', 'like', '%' .$type. '%');
+        }
+
+        $filteredBeats = $beat->get();
+
+        return response()->json([
+            'message' => 'Searched beats successfully',
+            'data' => BeatResources::collection($filteredBeats)
+        ]);
     }
 
     //filter by price

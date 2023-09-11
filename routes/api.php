@@ -60,19 +60,17 @@ Route::prefix('v1')->group(function () {
             Route::get('/genres', [GenreController::class, 'trending'])->name('genres.trending');
         });
 
-        //beats search route
         Route::get('/beats/search', [BeatController::class, 'searchByTitle'])->name('beats.search');
 
-        //beats filter by price
         Route::get('/beats/filter-by-price', [BeatController::class, 'filterByPrice'])->name('beats.filterByPrice');
 
-        //beats filter by genre
         Route::get('/beats/filter', [BeatController::class, 'filterByGenre'])->name('beats.filter');
 
-        //save for later
         Route::post('beats/{beat}/save-for-later', [SaveForLaterController::class, 'saveBeatForLater'])->name('beats.save-for-later');
 
-
+        Route::prefix('webhook')->group(function () {
+            Route::post('/verify-paystack', [PaymentController::class, 'verifyPaystack'])->name('verifyWebhook');
+        });
      
     });
 
@@ -104,7 +102,6 @@ Route::prefix('v1')->group(function () {
                 Route::get('/', [LicenseController::class, 'index'])->name('license.index');
                 // Route::get('/{id}', [LicenseController::class, 'show'])->name('license.show');
                 Route::post('/create', [LicenseController::class, 'store'])->name('license.store');
-    
             });
 
             //Admin- Genre routes
@@ -113,6 +110,8 @@ Route::prefix('v1')->group(function () {
                 Route::post('/update', [GenreController::class, 'update'])->name('genre.update');
                 Route::post('/delete', [GenreController::class, 'delete'])->name('genre.delete');
             });
+
+          
         });
 
         //User routes

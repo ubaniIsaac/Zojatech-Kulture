@@ -52,14 +52,25 @@ class PaymentController extends Controller
 
         $result = $this->paymentService->initializePayment($data);
 
-        return $this->successResponse('Payment initialzed', $result);
+        return response()->json([
+            'status' => true,
+            'message' => 'Payment initialzed',
+            'data' => $result,
+            'reference' => $ref,
+
+        ], 200);
     }
 
     public function verifyPayment(Request $request): JsonResponse
     {
         try {
             $response =  $this->paymentService->verifyPayment($request->reference);
-            
+            if($response['status'] == "abandoned"){
+                return response()->json([
+                    "message" => "Payament not complete",
+                    "reference"=> $request->reference
+                ], 400);
+            };
             if ($response['status'] == true) {
                 $payment = Payment::where('reference', $request->reference)->first();
                 $user = $payment->user;
@@ -101,17 +112,16 @@ class PaymentController extends Controller
                     'status' => "successful"
                 ]);
             }
+            return response()->json([
+                "message" => "Payment not complete",
+                'status' => 400
+            ]);
         } catch (\Throwable $th) {
             return response()->json([
                 "message" => $th->getMessage(),
                 'status' => 302
             ], 302);
         }
-
-        return response()->json([
-            "message" => "Payament failed",
-            'status' => 400
-        ]);
     }
 
     //Handles withdrawals

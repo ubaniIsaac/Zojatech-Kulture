@@ -189,7 +189,7 @@ class BeatController extends Controller
     {
         $keyword = $request->input('keyword');
 
-        $beats = Beat::where('title', 'like', '%' . $keyword . '%')->get();
+        $beats = Beat::where('name', 'like', '%' . $keyword . '%')->get();
 
         return response()->json(['beats' => $beats], 200);
     }

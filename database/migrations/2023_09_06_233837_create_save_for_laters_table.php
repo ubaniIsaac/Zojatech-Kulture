@@ -11,14 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
+
+        Schema::dropIfExists('save_for_laters');
         Schema::create('save_for_laters', function (Blueprint $table) {
             $table->id();
-        $table->unsignedBigInteger('user_id');
-        $table->unsignedBigInteger('beat_id');
-        $table->timestamps();
+            $table->ulid('user_id');
+            $table->ulid('beat_id');
+            $table->timestamps();
 
-        $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-        $table->foreign('beat_id')->references('id')->on('beats')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('beat_id')->references('id')->on('beats')->onDelete('cascade');
         });
     }
 

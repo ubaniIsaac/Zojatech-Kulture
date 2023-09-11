@@ -14,6 +14,7 @@ use App\Http\Requests\SignUpRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Resources\UserResources;
+use Illuminate\Support\Facades\Log;
 
 class AuthController extends Controller
 {
@@ -65,7 +66,9 @@ class AuthController extends Controller
 
         $token = $user->generateToken();
         $token = $user->createToken($user->email, [$user->user_type])->accessToken;
-        echo "Logginng in .........."
+
+        $userAgent = $request->header('User-Agent');
+        Log::info('User agent details: ' . $userAgent);
 
         return $this->successResponse('User logged in successfully', [
             'token' => $token,

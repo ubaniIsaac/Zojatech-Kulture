@@ -60,6 +60,13 @@ class Beat extends Model
         return $this->belongsTo(Producer::class);
     }
 
+
+    public function purchasers(): BelongsToMany
+    {
+        return $this->belongsToMany(Artiste::class, 'beat_purchases', 'beat_id', 'user_id')->withTimestamps();
+    }
+
+
     /**
      * Get the user associated with the beat.
      * 
@@ -76,5 +83,4 @@ class Beat extends Model
     {
         return $this->belongsToMany(User::class, 'save_for_later', 'beat_id', 'user_id');
     }
-
 }

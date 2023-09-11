@@ -16,6 +16,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\DB;
 
 class PaymentController extends Controller
 {
@@ -99,7 +100,14 @@ class PaymentController extends Controller
                     $cart->user->artistes->total_amount_spent += $beat->price;
                     $beat->save();
                     $beat->producer->save();
+
+                    //update table for beats purchased by artiste
+                    DB::table('beat_purchases')->insert([
+                        'user_id' => $cart->user->id,
+                        'beat_id' => $beat->id,
+                    ]);
                 }
+
 
                 //empty cart
                 $cart->update(['items' => [], 'total_price' => 0]);
@@ -167,5 +175,56 @@ class PaymentController extends Controller
             // dd($producer);
         }
         return $this->successResponse('Withdrawal initiated successfully', $producer);
+    }
+
+
+    //Webhook for verifying payment status
+    public function verifyPaystack(Request $request): JsonResponse
+    {
+
+        echo "Webhook called";
+        echo $request->all();
+        $event = $request->all();
+        $event = $event['event'];
+        $event = $event['data'];
+        $event = $event['reference'];
+        $payment = Payment::where('reference', $event)->first();
+        $user = $payment->user;
+
+        if ($payment?->status == 'successful') {
+            return response()->json([
+                "message" => "Payment already verified",
+                "data" =>  $payment,
+            ], 409);
+        }
+
+        $payment->status = 'successful'; // @phpstan-ignore-line
+        $payment?->save();
+
+        // disburse funds / update all producers' wallet / update Admin wallet. 
+        $cart = Cart::findorfail($payment->cart_id);
+        foreach ($cart->items as $item) {
+            //update beat details. 
+            $beat = Beat::findorfail($item);
+            $beat->producer->total_revenue += $beat->price;
+            $beat->producer->increment('total_beats_sold');
+            $beat->increment('total_sales');
+            $beat->decrement('available_copies');
+            $cart->user->artistes->increment('beats_purchased');
+            $cart->user->artistes->total_amount_spent += $beat->price;
+            $beat->save();
+            $beat->producer->save();
+        }
+
+        //empty cart
+        $cart->update(['items' => [], 'total_price' => 0]);
+        $token = $user->generateToken();
+        $token = $user->createToken($user->email, [$user->user_type])->accessToken;
+
+        return $this->successResponse('Payment Successful', [
+            'token' => $token,
+            'user' => new UserResources($user),
+            'status' => "successful"
+        ]);
     }
 }

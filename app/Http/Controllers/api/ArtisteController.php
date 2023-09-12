@@ -25,7 +25,7 @@ class ArtisteController extends Controller
 
             return $this->successResponse('Artistes retrieved successfully', $artistes);
         } catch (\Throwable $th) {
-            return $this->errorResponse('Artistes not found');
+            return $this->errorResponse($th->getMessage());
         }
     }
 

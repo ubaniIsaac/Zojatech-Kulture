@@ -106,6 +106,8 @@ class PaymentController extends Controller
                         'user_id' => $cart->user->id,
                         'beat_id' => $beat->id,
                     ]);
+
+
                 }
 
 

@@ -42,7 +42,7 @@ class BeatResources extends JsonResource
 
 
             'producer' => $this->producer,
-            'purchaed_by' => $this->purchasers,
+            'purchased_by' => $this->purchasers,
         ];
     }
 }

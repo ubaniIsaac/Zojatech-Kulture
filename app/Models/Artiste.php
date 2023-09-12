@@ -38,9 +38,9 @@ class Artiste extends User
         return $this->belongsTo(User::class);
     }
 
-    public function purchasedBeats()
+    public function purchasedBeats(): BelongsToMany
     {
-        return $this->belongsToMany(Beat::class, 'beat_purchases', 'user_id', 'beat_id')->withTimestamps();
+        return $this->belongsToMany(Beat::class, 'beat_purchases', 'id', 'beat_id');
     }    
 
 

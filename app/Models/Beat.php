@@ -63,7 +63,7 @@ class Beat extends Model
 
     public function purchasers(): BelongsToMany
     {
-        return $this->belongsToMany(User::class, 'beat_purchases', 'beat_id', 'user_id');
+        return $this->belongsToMany(User::class, 'beat_purchases', 'beat_id');
     }
 
 

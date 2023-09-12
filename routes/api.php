@@ -28,6 +28,8 @@ Route::prefix('v1')->group(function () {
             return response()->json(['message' => 'Welcome to Kulture Api'], 200);
         })->name('welcome');
 
+        Route::get('/beats/search/{name}', [BeatController::class, 'search'])->name('beats.search');
+
         Route::post('/register', [AuthController::class, 'register'])->name('register');
 
         Route::post('/signin', [AuthController::class, 'signin'])->name('signin');
@@ -60,7 +62,7 @@ Route::prefix('v1')->group(function () {
             Route::get('/genres', [GenreController::class, 'trending'])->name('genres.trending');
         });
 
-        Route::get('/beats/search', [BeatController::class, 'searchByTitle'])->name('beats.search');
+        
 
         Route::get('/beats/filter-by-price', [BeatController::class, 'filterByPrice'])->name('beats.filterByPrice');
 

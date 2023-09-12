@@ -68,7 +68,10 @@ class AuthController extends Controller
         $token = $user->createToken($user->email, [$user->user_type])->accessToken;
 
         $userAgent = $request->header('User-Agent');
+        $userIP = $request->ip();
         Log::info('User agent details: ' . $userAgent);
+        Log::info('User IP: ' . $userIP);
+
 
         return $this->successResponse('User logged in successfully', [
             'token' => $token,

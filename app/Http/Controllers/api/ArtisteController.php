@@ -25,7 +25,7 @@ class ArtisteController extends Controller
 
             return $this->successResponse('Artistes retrieved successfully', $artistes);
         } catch (\Throwable $th) {
-            return $this->errorResponse($th->getMessage());
+            return $this->errorResponse('Artistes not found');
         }
     }
 
@@ -49,6 +49,7 @@ class ArtisteController extends Controller
         } catch (\Throwable $th) {
             return response()->json(['exception' => $th->getMessage()]);
             // return $this->errorResponse('User not found');
+
         }
     }
 

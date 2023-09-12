@@ -16,7 +16,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\{DB, Log};
 
 class PaymentController extends Controller
 {
@@ -184,9 +184,9 @@ class PaymentController extends Controller
     public function verifyPaystack(Request $request): JsonResponse
     {
 
-        echo "Webhook called";
-        echo $request->all();
         $event = $request->all();
+        Log::info('Log Event From Paystack: '. $event);
+
         $event = $event['event'];
         $event = $event['data'];
         $event = $event['reference'];
@@ -216,6 +216,12 @@ class PaymentController extends Controller
             $cart->user->artistes->total_amount_spent += $beat->price;
             $beat->save();
             $beat->producer->save();
+
+             //update table for beats purchased by artiste
+             DB::table('beat_purchases')->insert([
+                'user_id' => $cart->user->id,
+                'beat_id' => $beat->id,
+            ]);
         }
 
         //empty cart

@@ -15,14 +15,9 @@ class Producer extends User
      *
      * @var array<int, string>
      */
-    protected $guarded = [
-      
-    ];
+    protected $guarded = [];
 
-    protected $fillable = [
-      
-
-    ];
+    protected $fillable = [];
 
     /**
      * Get the user that owns the producer.

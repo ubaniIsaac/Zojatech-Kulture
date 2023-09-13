@@ -40,7 +40,7 @@ Route::prefix('v1')->group(function () {
 
         Route::get('/genre/{id}', [GenreController::class, 'show'])->name('genre.show');
 
-        
+
         Route::get('users/{id}', [UserController::class, 'show'])->name('show-user');
 
         Route::get('/producers', [ProducerController::class, 'index'])->name('producers.index');
@@ -65,14 +65,12 @@ Route::prefix('v1')->group(function () {
             Route::get('/filter-by-price', [BeatController::class, 'filterByPrice'])->name('beats.filterByPrice');
             Route::get('/filter', [BeatController::class, 'filterByGenre'])->name('beats.filter');
             Route::post('/{beat}/save-for-later', [SaveForLaterController::class, 'saveBeatForLater'])->name('beats.save-for-later');
-    
         });
-        
-        
+
+
         Route::prefix('webhook')->group(function () {
             Route::post('/verify-paystack', [PaymentController::class, 'verifyPaystack'])->name('verifyWebhook');
         });
-     
     });
 
 
@@ -80,10 +78,10 @@ Route::prefix('v1')->group(function () {
     // Declare authenticated routes
     Route::group(['middleware' => 'auth:api'], static function () {
 
-         //Carts routes
-         Route::prefix('carts')->middleware(['role:artiste'])->group(function(){
-            Route::post('/add/{beat_id}',[Cartcontroller::class, 'add'])->name('add-beat-to-cart');
-            Route::get('/view',[Cartcontroller::class, 'view'])->name('view-all-beats-in-cart');
+        //Carts routes
+        Route::prefix('carts')->middleware(['role:artiste'])->group(function () {
+            Route::post('/add/{beat_id}', [Cartcontroller::class, 'add'])->name('add-beat-to-cart');
+            Route::get('/view', [Cartcontroller::class, 'view'])->name('view-all-beats-in-cart');
             Route::delete('/remove/{beat_id}', [Cartcontroller::class, 'destroy'])->name('delete-from-cart');
         });
 
@@ -92,7 +90,7 @@ Route::prefix('v1')->group(function () {
             Route::post('/pay', [PaymentController::class, 'makePayment'])->name('initiatePayment');
             Route::post('/createRecipient', [PaymentController::class, 'createRecipient'])->name('createRecipient');
         });
-        
+
         Route::post('/payment/withdraw',  [PaymentController::class, 'initiateWithdrawal'])->middleware(['role:producer'])->name('initiatewithdrawal');
 
 
@@ -111,12 +109,10 @@ Route::prefix('v1')->group(function () {
                 Route::post('/update', [GenreController::class, 'update'])->name('genre.update');
                 Route::post('/delete', [GenreController::class, 'delete'])->name('genre.delete');
             });
-
-          
         });
 
         //User routes
-            Route::prefix('users')->group(function () {
+        Route::prefix('users')->group(function () {
             Route::get('/', [UserController::class, 'index'])->name('get-users');
 
 
@@ -146,12 +142,5 @@ Route::prefix('v1')->group(function () {
             Route::get('/{id}/beats', [FavouriteController::class, 'index'])->name('favourite.index');
             Route::delete('/{id}', [FavouriteController::class, 'delete'])->name('favourite.delete');
         });
-
-        
-
-
-        
     });
-
-    
 });

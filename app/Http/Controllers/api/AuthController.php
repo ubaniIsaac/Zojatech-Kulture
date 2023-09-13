@@ -11,10 +11,9 @@ use App\Models\{Cart, User, Producer, };
 use App\Http\Requests\LoginRequest;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\SignUpRequest;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\{DB, Auth};
 use Illuminate\Support\Facades\Hash;
 use App\Http\Resources\UserResources;
-use Illuminate\Support\Facades\Log;
 
 class AuthController extends Controller
 {
@@ -66,11 +65,6 @@ class AuthController extends Controller
 
         $token = $user->generateToken();
         $token = $user->createToken($user->email, [$user->user_type])->accessToken;
-
-        $userAgent = $request->header('User-Agent');
-        $userIP = $request->ip();
-        Log::info('User agent details: ' . $userAgent);
-        Log::info('User IP: ' . $userIP);
 
 
         return $this->successResponse('User logged in successfully', [

@@ -40,10 +40,7 @@ Route::prefix('v1')->group(function () {
 
         Route::get('/genre/{id}', [GenreController::class, 'show'])->name('genre.show');
 
-        Route::get('/beats/{id}', [BeatController::class, 'show'])->name('beats.show');
-
-        Route::get('/beats', [BeatController::class, 'index'])->name('beats.index');
-
+        
         Route::get('users/{id}', [UserController::class, 'show'])->name('show-user');
 
         Route::get('/producers', [ProducerController::class, 'index'])->name('producers.index');
@@ -62,14 +59,16 @@ Route::prefix('v1')->group(function () {
             Route::get('/genres', [GenreController::class, 'trending'])->name('genres.trending');
         });
 
+        Route::prefix('beats')->group(function () {
+            Route::get('/{id}', [BeatController::class, 'show'])->name('beats.show');
+            Route::get('/', [BeatController::class, 'index'])->name('beats.index');
+            Route::get('/filter-by-price', [BeatController::class, 'filterByPrice'])->name('beats.filterByPrice');
+            Route::get('/filter', [BeatController::class, 'filterByGenre'])->name('beats.filter');
+            Route::post('/{beat}/save-for-later', [SaveForLaterController::class, 'saveBeatForLater'])->name('beats.save-for-later');
+    
+        });
         
-
-        Route::get('/beats/filter-by-price', [BeatController::class, 'filterByPrice'])->name('beats.filterByPrice');
-
-        Route::get('/beats/filter', [BeatController::class, 'filterByGenre'])->name('beats.filter');
-
-        Route::post('beats/{beat}/save-for-later', [SaveForLaterController::class, 'saveBeatForLater'])->name('beats.save-for-later');
-
+        
         Route::prefix('webhook')->group(function () {
             Route::post('/verify-paystack', [PaymentController::class, 'verifyPaystack'])->name('verifyWebhook');
         });

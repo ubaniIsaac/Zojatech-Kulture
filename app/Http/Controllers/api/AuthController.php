@@ -51,7 +51,7 @@ class AuthController extends Controller
        
         return $this->successResponse('User created successfully', [
             'user' => new UserResources($user)
-        ]);
+        ], 201);
     }
     
     public function signin(LoginRequest $request): JsonResponse

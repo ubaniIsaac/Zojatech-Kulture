@@ -35,16 +35,16 @@ class PaymentController extends Controller
     {
         $user = auth()->user();
         $ref = uniqid();
-        $cart = Cart::where('user_id', $user->id)->first();
-        if (count($cart->items) == 0) {
+        $cart = Cart::where('user_id', $user?->id)->first();
+        if (count($cart?->items) == 0) {
             return $this->errorResponse('Nothing in cart');
         }
         $data = [
-            'amount' => $user->cart->total_price,
+            'amount' => $user?->cart->total_price,
             'email' => $user?->email,
             'user_id' => $user?->id,
-            'cart_id' => $cart->id,
-            'cart_items' => $user->cart->items,
+            'cart_id' => $cart?->id,
+            'cart_items' => $user?->cart->items,
             'reference' => $ref,
             'callback_url' => $request->baseUrl . "/verify-payment"
         ];
@@ -74,7 +74,7 @@ class PaymentController extends Controller
             };
             if ($response['status'] == true) {
                 $payment = Payment::where('reference', $request->reference)->first();
-                $user = $payment->user;
+                $user = $payment?->user;
 
 
                 if ($payment?->status == 'successful') {
@@ -88,7 +88,7 @@ class PaymentController extends Controller
                 $payment?->save();
 
                 // disburse funds / update all producers' wallet / update Admin wallet. 
-                $cart = Cart::findorfail($payment->cart_id);
+                $cart = Cart::findorfail($payment?->cart_id);
                 foreach ($cart->items as $item) {
                     //update beat details. 
                     $beat = Beat::findorfail($item);

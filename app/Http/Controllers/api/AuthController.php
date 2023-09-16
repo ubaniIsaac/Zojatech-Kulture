@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\api;
 
+use App\Events\SignUpEvent;
 use App\Models\Artiste;
 use Illuminate\Http\Request;
 use App\Traits\ResponseTrait;
@@ -48,6 +49,7 @@ class AuthController extends Controller
             Cart::create(['user_id' => $user->id, 'items' => []]);
 
         }
+        event(new SignUpEvent ($user));
        
         return $this->successResponse('User created successfully', [
             'user' => new UserResources($user)
@@ -65,7 +67,6 @@ class AuthController extends Controller
 
         $token = $user->generateToken();
         $token = $user->createToken($user->email, [$user->user_type])->accessToken;
-
 
         return $this->successResponse('User logged in successfully', [
             'token' => $token,

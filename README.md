@@ -1,65 +1,148 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Kulture API
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Welcome to the Kulture API documentation. This API is designed to provide music producers and artists with a platform to interact with beats. Producers can perform CRUD (Create, Read, Update, Delete) operations on beats, while artists can purchase beats from the platform.
 
-## About Laravel
+## Live Link
+You can access the live version of the Kulture API at [https://kulture-api.onrender.com/api/v1](https://kulture-api.onrender.com/api/v1)
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## API Documentation
+The API documentation can be found at [https://documenter.getpostman.com/view/10737800/TzXtJz5V](https://documenter.getpostman.com/view/20573715/2s9Y5crzch)
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## API Documentation (Local)
+The API documentation can be found at [http://localhost:8000/api/documentation](http://localhost:8000/api/documentation)
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Docker Image Link
+For Docker deployment, you can use the following image link: `07fffffffffffffffffffff`
 
-## Learning Laravel
+## Requirements
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+- PHP 7.3+
+- Composer
+- Laravel 7+
+- MySQL 5.7+
+- Docker (Optional)
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+## Deployment
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+- Clone the repository with the command `git clone`
+- `cd` into the project directory
+- Run `composer install` to install the project dependencies
+- Create a database for the application
+- Copy the `.env.example` file and rename it to `.env`
+- Update the `.env` file with your database credentials
+- Run `php artisan migrate` to migrate the database
+- Run `php artisan serve` to start the application
 
-## Laravel Sponsors
+## Deployment (Docker)
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+- Clone the repository with the command `git clone`
+- `cd` into the project directory
+- Run `docker-compose up -d --build` to build the docker containers
+- Run `docker-compose exec app php artisan migrate` to migrate the database
+- Run `docker-compose exec app php artisan serve` to start the application
 
-### Premium Partners
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+## Testing
 
-## Contributing
+- Run `php artisan test` to run the tests.
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## Key Features
 
-## Code of Conduct
+### Users (Producers and Artistes)
+- Can Sign Up and Login.
+- Can `update profile` details.
+- Can `update password`.
+- Can `update profile picture`.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### Users (`Producers Only`)
+- Can Perform `CRUD operations on beats`.
+- Producers can set the number of beat copies available for purchase.
 
-## Security Vulnerabilities
+### Users (`Artistes Only`)
+- Can `Purchase` Beats.
+- Can listen to `demo` version of beats.
+- Can Only `download purchased beats` (download locally or send to email).
+- Purchased Beats are available for downloads always.
+- Can `Flag beats`.
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### Beats Model
+- Beats Flagged by more than 10 users will be set to `under-review`.
+- Beats `under-review` cannot be seen by users.
+
+### Subscription Model
+- Free Users (Producers) can only `upload a max. of 5 beats`.
+- Free Users (Artists) can only `listen to a max. of 5 beats`.
+- Referred Users from an existing user can `upload/listen` to a max. of 10 beats.
+- When Users referral codes are used, users' `upload/listen` limit is increased by 5.
+
+### Advanced Features
+- Users can only login to the web app with `one device at a time`.
+- When new devices are detected, `Users are notified`.
+- Beats `under review` require two admin approvals before the flag can be removed.
+
+##
+# API Endpoints
+
+
+
+### Beats
+
+- GET `/api/v1/beats` - Get all beats
+- GET `/api/v1/beats/{id}` - Get a single beat
+- POST `/api/v1/beats` - Create a beat
+- PATCH `/api/v1/beats/{id}` - Update a beat
+- DELETE `/api/v1/beats/{id}` - Delete a beat
+
+### Purchases
+- GET `/api/v1/purchases` - Get all purchases
+- GET `/api/v1/purchases/{id}` - Get a single purchase
+- POST `/api/v1/purchases` - Create a purchase
+- PATCH `/api/v1/purchases/{id}` - Update a purchase
+- DELETE `/api/v1/purchases/{id}` - Delete a purchase
+
+
+##
+## ADMIN Routes
+
+## Flag
+- GET `/api/v1/admin/flagged-beats` - Get all flagged beats
+- GET `/api/v1/admin/flagged-beats/{id}` - Get a single flagged beat
+- POST `/api/v1/admin/flagged-beats` - Create a flagged beat
+- PATCH `/api/v1/admin/flagged-beats/{id}` - Update a flagged beat
+- DELETE `/api/v1/admin/flagged-beats/{id}` - Delete a flagged beat
+
+## Purchases
+- GET `/api/v1/admin/purchases` - Get all purchases
+- GET `/api/v1/admin/purchases/{id}` - Get a single purchase
+- POST `/api/v1/admin/purchases` - Create a purchase
+- PATCH `/api/v1/admin/purchases/{id}` - Update a purchase
+- DELETE `/api/v1/admin/purchases/{id}` - Delete a purchase
+
+## Beats
+- POST `/api/v1/admin/beats/{id}/approve` - Approve a flagged beat
+- POST `/api/v1/admin/beats/{id}/reject` - Reject a flagged beat
+- GET `/api/v1/admin/beats` - Get all beats
+- GET `/api/v1/admin/beats/{id}` - Get a single beat
+- POST `/api/v1/admin/beats` - Create a beat
+- PATCH `/api/v1/admin/beats/{id}` - Update a beat
+- DELETE `/api/v1/admin/beats/{id}` - Delete a beat
+
+
+## Users
+- GET `/api/v1/users` - Get all users
+- GET `/api/v1/users/{id}` - Get a single user
+- PATCH `/api/v1/users/{id}` - Update a user
+- DELETE `/api/v1/users/{id}` - Delete a user
+- POST `/api/v1/admin/users/{id}/approve` - Approve a user
+- POST `/api/v1/admin/users/{id}/reject` - Reject a user
+
+## Subscriptions
+
+- GET `/api/v1/admin/subscriptions` - Get all subscriptions
+- GET `/api/v1/admin/subscriptions/{id}` - Get a single subscription
+- POST `/api/v1/admin/subscriptions` - Create a subscription
+- PATCH `/api/v1/admin/subscriptions/{id}` - Update a subscription
+- DELETE `/api/v1/admin/subscriptions/{id}`
 
 ## License
 

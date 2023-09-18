@@ -6,7 +6,7 @@ Welcome to the Kulture API documentation. This API is designed to provide music 
 You can access the live version of the Kulture API at [https://kulture-api.onrender.com/api/v1](https://kulture-api.onrender.com/api/v1)
 
 ## API Documentation
-The API documentation can be found at [https://documenter.getpostman.com/view/10737800/TzXtJz5V](https://documenter.getpostman.com/view/10737800/TzXtJz5V)
+The API documentation can be found at [https://documenter.getpostman.com/view/10737800/TzXtJz5V](https://documenter.getpostman.com/view/20573715/2s9Y5crzch)
 
 ## API Documentation (Local)
 The API documentation can be found at [http://localhost:8000/api/documentation](http://localhost:8000/api/documentation)

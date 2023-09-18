@@ -36,6 +36,10 @@ Route::prefix('v1')->group(function () {
 
         Route::post('/signout', [AuthController::class, 'signout'])->name('signout');
 
+        Route::post('forgot-password', [AuthController::class, 'forgotPassword'])->name('forgetPassword');
+
+        Route::post('reset-password', [AuthController::class, 'passwordReset'])->name('resetPassword');
+
         Route::get('/genre', [GenreController::class, 'index'])->name('genre.index');
 
         Route::get('/genre/{id}', [GenreController::class, 'show'])->name('genre.show');

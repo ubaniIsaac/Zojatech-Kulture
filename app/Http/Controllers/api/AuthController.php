@@ -6,19 +6,20 @@ use App\Models\Artiste;
 use Illuminate\Http\Request;
 use App\Traits\ResponseTrait;
 use App\Services\MediaService;
-use Illuminate\Http\JsonResponse;
 // use Illuminate\Support\Facades\DB;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\DB;
 use App\Http\Requests\LoginRequest;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\SignUpRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use App\Http\Resources\UserResources;
-use App\Models\{Cart, User, Producer };
-
-
-
+use App\Http\Requests\passwordResetRequest;
+use App\Http\Requests\forgetPasswordRequest;
+use App\Models\{Cart, User, Producer, ResetCode};
 
 class AuthController extends Controller
 {
@@ -83,50 +84,43 @@ class AuthController extends Controller
         ]);
     }
 
+    public function forgotPassword(forgetPasswordRequest $request)
+    {
+        ResetCode::where('email', $request->email)->delete();
 
-    // public function forgetPassword(ForgotPasswordRequest $request)
-    // {
-    //     // Delete all old codes that the user sent before.
-    //     ResetCodePassword::where('email', $request->email)->delete();
+        // Generate random code
 
-    //     // Generate random code
-    //     $data['email'] = $request->email;
-    //     $data['Token'] = rand(100, 999); // Updated range for 3-digit numbers
-    //     $data['created'] = now();
+        $data['email'] = $request->email;
+        $data['Token'] = rand(000, 999);
+        $data['created'] = now();
 
-    //     $code = ResetCodePassword::create($data);
+        $code = ResetCode::create($data);
 
-    //     return response(['message' => trans('passwords.sent')], 200);
-    // }
+        return response()->json(['message' => trans('passwords.sent'), 200]);
 
-    // public function passwordReset(PasswordResetRequest $request)
-    // {
-    //     $user = User::where('email', $request->email)->first();
+    }
 
-    //     if (!$user) {
-    //         return response()->json(['message' => 'User not found'], 404);
-    //     }
+    public function passwordReset(passwordResetRequest $request)
+    {
+        $user = User::where('email', $request->email)->first();
 
-    //     // Validate the password using Laravel's validation rules.
-    //     $validatedData = $request->validate([
-    //         'password' => ['required', 'string', 'min:8'], // Add your desired validation rules
-    //     ]);
+        if (!$user)
+        {
+            return response()->json(['message' => 'This user is not found']);
+        }
 
-    //     $user->fill([
-    //         'password' => Hash::make($validatedData['password']),
-    //     ]);
-    //     $user->save();
+        $user->fill([
+            'password' => Hash::make($request->password)
+        ]);
+        $user->save();
 
-    //     DB::table('resetcodepassword')
-    //         ->where('email', $user->email)
-    //         ->delete();
+        DB::table('resetcodepassword')->where('email', $user->email)->delete();
 
-    //     return response()->json([
-    //         'message' => 'Password reset successful',
-    //         'data' => [$user],
-    //     ]);
-    // }
-
+        return response()->json([
+            'message' => 'Password reset successful',
+            'data' => $user
+        ]);
+    }
 
     public function signout(Request $request): JsonResponse
     {

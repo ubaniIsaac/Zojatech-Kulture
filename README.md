@@ -48,6 +48,12 @@ For Docker deployment, you can use the following image link: `07ffffffffffffffff
 
 ## Key Features
 
+### Users (Producers and Artistes)
+- Can Sign Up and Login.
+- Can `update profile` details.
+- Can `update password`.
+- Can `update profile picture`.
+
 ### Users (`Producers Only`)
 - Can Perform `CRUD operations on beats`.
 - Producers can set the number of beat copies available for purchase.
@@ -74,7 +80,10 @@ For Docker deployment, you can use the following image link: `07ffffffffffffffff
 - When new devices are detected, `Users are notified`.
 - Beats `under review` require two admin approvals before the flag can be removed.
 
-## API Endpoints
+##
+# API Endpoints
+
+
 
 ### Beats
 
@@ -85,7 +94,6 @@ For Docker deployment, you can use the following image link: `07ffffffffffffffff
 - DELETE `/api/v1/beats/{id}` - Delete a beat
 
 ### Purchases
-
 - GET `/api/v1/purchases` - Get all purchases
 - GET `/api/v1/purchases/{id}` - Get a single purchase
 - POST `/api/v1/purchases` - Create a purchase
@@ -93,7 +101,8 @@ For Docker deployment, you can use the following image link: `07ffffffffffffffff
 - DELETE `/api/v1/purchases/{id}` - Delete a purchase
 
 
-### ADMIN
+##
+## ADMIN Routes
 
 ## Flag
 - GET `/api/v1/admin/flagged-beats` - Get all flagged beats

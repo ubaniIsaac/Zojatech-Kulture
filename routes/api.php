@@ -28,6 +28,8 @@ Route::prefix('v1')->group(function () {
             return response()->json(['message' => 'Welcome to Kulture Api'], 200);
         })->name('welcome');
 
+        Route::get('/beats/search/{name}', [BeatController::class, 'search'])->name('beats.search');
+
         Route::post('/register', [AuthController::class, 'register'])->name('register');
 
         Route::post('/signin', [AuthController::class, 'signin'])->name('signin');
@@ -38,9 +40,6 @@ Route::prefix('v1')->group(function () {
 
         Route::get('/genre/{id}', [GenreController::class, 'show'])->name('genre.show');
 
-        Route::get('/beats/{id}', [BeatController::class, 'show'])->name('beats.show');
-
-        Route::get('/beats', [BeatController::class, 'index'])->name('beats.index');
 
         Route::get('users/{id}', [UserController::class, 'show'])->name('show-user');
 
@@ -60,7 +59,18 @@ Route::prefix('v1')->group(function () {
             Route::get('/genres', [GenreController::class, 'trending'])->name('genres.trending');
         });
 
-     
+        Route::prefix('beats')->group(function () {
+            Route::get('/{id}', [BeatController::class, 'show'])->name('beats.show');
+            Route::get('/', [BeatController::class, 'index'])->name('beats.index');
+            Route::get('/filter-by-price', [BeatController::class, 'filterByPrice'])->name('beats.filterByPrice');
+            Route::get('/filter', [BeatController::class, 'filterByGenre'])->name('beats.filter');
+            Route::post('/{beat}/save-for-later', [SaveForLaterController::class, 'saveBeatForLater'])->name('beats.save-for-later');
+        });
+
+
+        Route::prefix('webhook')->group(function () {
+            Route::post('/verify-paystack', [PaymentController::class, 'verifyPaystack'])->name('verifyWebhook');
+        });
     });
 
 
@@ -68,10 +78,10 @@ Route::prefix('v1')->group(function () {
     // Declare authenticated routes
     Route::group(['middleware' => 'auth:api'], static function () {
 
-         //Carts routes
-         Route::prefix('carts')->middleware(['role:artiste'])->group(function(){
-            Route::post('/add/{beat_id}',[Cartcontroller::class, 'add'])->name('add-beat-to-cart');
-            Route::get('/view',[Cartcontroller::class, 'view'])->name('view-all-beats-in-cart');
+        //Carts routes
+        Route::prefix('carts')->middleware(['role:artiste'])->group(function () {
+            Route::post('/add/{beat_id}', [Cartcontroller::class, 'add'])->name('add-beat-to-cart');
+            Route::get('/view', [Cartcontroller::class, 'view'])->name('view-all-beats-in-cart');
             Route::delete('/remove/{beat_id}', [Cartcontroller::class, 'destroy'])->name('delete-from-cart');
         });
 
@@ -80,7 +90,7 @@ Route::prefix('v1')->group(function () {
             Route::post('/pay', [PaymentController::class, 'makePayment'])->name('initiatePayment');
             Route::post('/createRecipient', [PaymentController::class, 'createRecipient'])->name('createRecipient');
         });
-        
+
         Route::post('/payment/withdraw',  [PaymentController::class, 'initiateWithdrawal'])->middleware(['role:producer'])->name('initiatewithdrawal');
 
 
@@ -91,7 +101,6 @@ Route::prefix('v1')->group(function () {
                 Route::get('/', [LicenseController::class, 'index'])->name('license.index');
                 // Route::get('/{id}', [LicenseController::class, 'show'])->name('license.show');
                 Route::post('/create', [LicenseController::class, 'store'])->name('license.store');
-    
             });
 
             //Admin- Genre routes
@@ -103,7 +112,7 @@ Route::prefix('v1')->group(function () {
         });
 
         //User routes
-            Route::prefix('users')->group(function () {
+        Route::prefix('users')->group(function () {
             Route::get('/', [UserController::class, 'index'])->name('get-users');
 
 
@@ -133,6 +142,5 @@ Route::prefix('v1')->group(function () {
             Route::get('/{id}/beats', [FavouriteController::class, 'index'])->name('favourite.index');
             Route::delete('/{id}', [FavouriteController::class, 'delete'])->name('favourite.delete');
         });
-        
     });
 });

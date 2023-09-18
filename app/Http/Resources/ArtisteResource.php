@@ -26,7 +26,7 @@ class ArtisteResource extends JsonResource
                 'created_at' => $this->created_at,
 
             ],
-            'purchased_beats' => [],
+            'purchased_beats' => $this->purchasedBeats,
             'favourite_beats' => $this->favourites
 
         ];

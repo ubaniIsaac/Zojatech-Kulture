@@ -16,7 +16,7 @@ class FavouriteController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request, string $id)
+    public function index(Request $request, string $id): JsonResponse
     {
         $auth = auth()->id();
         $artiste = Artiste::where('user_id', $auth)->first();
@@ -31,7 +31,7 @@ class FavouriteController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request, string $id)
+    public function store(Request $request, string $id): JsonResponse
     {
         try {
             $authId = auth()->id();

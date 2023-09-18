@@ -35,20 +35,25 @@ class ArtisteController extends Controller
     public function show(string $id): JsonResponse
     {
         try {
-            $artiste = User::findOrFail($id);
+            $user = User::findOrFail($id);
 
-            if ($artiste) {
-                $artiste = Artiste::where('user_id', $id)->first();
-                $artiste->increment('profile_views');
-            } else {
+            if(!$user) {
+                return $this->errorResponse('User not found');
+            }
+
+            $artiste = Artiste::where('user_id', $user->id)->first();
+
+            if(!$artiste) {
                 return $this->errorResponse('User is not an Artiste');
             }
 
+            // Update the artiste's view count
+            $artiste->increment('profile_views');
 
             return $this->successResponse('Artiste retrieved successfully', new ArtisteResource($artiste));
         } catch (\Throwable $th) {
-            // return response()->json(['exception' => $th->getMessage()]);
-            return $this->errorResponse('User not found');
+            return response()->json(['exception' => $th->getMessage()]);
+            // return $this->errorResponse('User not found');
         }
     }
 

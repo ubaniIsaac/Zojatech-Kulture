@@ -16,6 +16,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\{DB, Log};
 
 class PaymentController extends Controller
 {
@@ -52,14 +53,25 @@ class PaymentController extends Controller
 
         $result = $this->paymentService->initializePayment($data);
 
-        return $this->successResponse('Payment initialzed', $result);
+        return response()->json([
+            'status' => true,
+            'message' => 'Payment initialzed',
+            'data' => $result,
+            'reference' => $ref,
+
+        ], 200);
     }
 
     public function verifyPayment(Request $request): JsonResponse
     {
         try {
             $response =  $this->paymentService->verifyPayment($request->reference);
-            
+            if($response['status'] == "abandoned"){
+                return response()->json([
+                    "message" => "Payament not complete",
+                    "reference"=> $request->reference
+                ], 400);
+            };
             if ($response['status'] == true) {
                 $payment = Payment::where('reference', $request->reference)->first();
                 $user = $payment->user;
@@ -88,7 +100,16 @@ class PaymentController extends Controller
                     $cart->user->artistes->total_amount_spent += $beat->price;
                     $beat->save();
                     $beat->producer->save();
+
+                    //update table for beats purchased by artiste
+                    DB::table('beat_purchases')->insert([
+                        'user_id' => $cart->user->id,
+                        'beat_id' => $beat->id,
+                    ]);
+
+
                 }
+
 
                 //empty cart
                 $cart->update(['items' => [], 'total_price' => 0]);
@@ -101,17 +122,16 @@ class PaymentController extends Controller
                     'status' => "successful"
                 ]);
             }
+            return response()->json([
+                "message" => "Payment not complete",
+                'status' => 400
+            ]);
         } catch (\Throwable $th) {
             return response()->json([
                 "message" => $th->getMessage(),
                 'status' => 302
             ], 302);
         }
-
-        return response()->json([
-            "message" => "Payament failed",
-            'status' => 400
-        ]);
     }
 
     //Handles withdrawals
@@ -157,5 +177,62 @@ class PaymentController extends Controller
             // dd($producer);
         }
         return $this->successResponse('Withdrawal initiated successfully', $producer);
+    }
+
+
+    //Webhook for verifying payment status
+    public function verifyPaystack(Request $request): JsonResponse
+    {
+
+        $event = $request->all();
+        Log::info('Log Event From Paystack: '. $event);
+
+        $event = $event['event'];
+        $event = $event['data'];
+        $event = $event['reference'];
+        $payment = Payment::where('reference', $event)->first();
+        $user = $payment->user;
+
+        if ($payment?->status == 'successful') {
+            return response()->json([
+                "message" => "Payment already verified",
+                "data" =>  $payment,
+            ], 409);
+        }
+
+        $payment->status = 'successful'; // @phpstan-ignore-line
+        $payment?->save();
+
+        // disburse funds / update all producers' wallet / update Admin wallet. 
+        $cart = Cart::findorfail($payment->cart_id);
+        foreach ($cart->items as $item) {
+            //update beat details. 
+            $beat = Beat::findorfail($item);
+            $beat->producer->total_revenue += $beat->price;
+            $beat->producer->increment('total_beats_sold');
+            $beat->increment('total_sales');
+            $beat->decrement('available_copies');
+            $cart->user->artistes->increment('beats_purchased');
+            $cart->user->artistes->total_amount_spent += $beat->price;
+            $beat->save();
+            $beat->producer->save();
+
+             //update table for beats purchased by artiste
+             DB::table('beat_purchases')->insert([
+                'user_id' => $cart->user->id,
+                'beat_id' => $beat->id,
+            ]);
+        }
+
+        //empty cart
+        $cart->update(['items' => [], 'total_price' => 0]);
+        $token = $user->generateToken();
+        $token = $user->createToken($user->email, [$user->user_type])->accessToken;
+
+        return $this->successResponse('Payment Successful', [
+            'token' => $token,
+            'user' => new UserResources($user),
+            'status' => "successful"
+        ]);
     }
 }

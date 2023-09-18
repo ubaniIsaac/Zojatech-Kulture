@@ -24,7 +24,6 @@ class Artiste extends User
 
     protected $fillable = [
       
-
     ];
 
     
@@ -34,16 +33,21 @@ class Artiste extends User
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\User, \App\Models\Artiste>
      */
 
-
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
+    public function purchasedBeats(): BelongsToMany
+    {
+        return $this->belongsToMany(Beat::class, 'beat_purchases', 'user_id');
+    }    
+
+
     /**
-     * Get the beats for the artiste.
+     * Get the favourite beats for the artiste.
      * 
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\Beat>
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<\App\Models\Beat>
      */
 
     public function favourites(): BelongsToMany

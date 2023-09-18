@@ -32,14 +32,17 @@ class BeatResources extends JsonResource
                 'total_sales' => $this->total_sales,
                 'licence_type' => $this->license_type,
                 'avaliable_copies' => $this->available_copies,
+                'copies_sold' => $this->copies_sold,
                 'plays' => $this->play_count,
                 'views' => $this->view_count,
                 'likes' => $this->like_count,
                 'downloads' => $this->download_count,
+                'status' => $this->status,
             ],
 
 
             'producer' => $this->producer,
+            'purchased_by' => $this->purchasers,
         ];
     }
 }

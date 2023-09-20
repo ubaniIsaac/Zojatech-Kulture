@@ -23,7 +23,11 @@ class LoginRequest extends FormRequest
     {
         return [
             'email' => 'required|string',
-            'password' => 'required|string'
+            'password' => 'required|string',
+            'device_id' => 'nullable|string',
+            'device_name' => 'nullable|string',
+            'device_os' => 'nullable|string',
+            'device_ip' => 'nullable|string',
         ];
     }
 }

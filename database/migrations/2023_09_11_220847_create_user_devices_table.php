@@ -11,14 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('user_devices', function (Blueprint $table) {
+        Schema::create('users_devices', function (Blueprint $table) {
             $table->id();
             $table->string('device_id');
-            $table->string('device_type');
-            $table->string('device_token');
             $table->string('device_name');
             $table->string('device_os');
-            $table->string('device_IP');
+            $table->string('device_ip');
             $table->foreignUlid('user_id')->constrained()->onDelete('cascade');
             $table->timestamps();
         });

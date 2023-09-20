@@ -3,17 +3,19 @@
 namespace App\Http\Controllers\api;
 
 use App\Events\SignUpEvent;
-use App\Models\Artiste;
 use Illuminate\Http\Request;
 use App\Traits\ResponseTrait;
 use App\Services\MediaService;
 use Illuminate\Http\JsonResponse;
-use App\Models\{Cart, User, Producer, };
+use Illuminate\Support\Facades\Artisan;
+use App\Models\{Cart, User};
 use App\Http\Requests\LoginRequest;
 use App\Http\Controllers\Controller;
+use App\Console\Commands\SignUpCommands;
 use App\Http\Requests\SignUpRequest;
 use Illuminate\Support\Facades\{DB, Auth};
 use Illuminate\Support\Facades\Hash;
+use App\Jobs\{SignUpJobs, SendWelcomeMail};
 use App\Http\Resources\UserResources;
 
 class AuthController extends Controller
@@ -21,13 +23,7 @@ class AuthController extends Controller
     //
     use ResponseTrait;
     public function register(SignUpRequest $request): JsonResponse
-    {
-        $data = $request->all();
-
-        if ($request->hasFile('profile_picture')) {
-            $imageUrl = MediaService::uploadImage($request->file('profile_picture'), 'profileImages');
-        }
-
+    {   
         $user = User::create(array_merge(
             $request->validated(),
             [
@@ -42,20 +38,21 @@ class AuthController extends Controller
             ]
         ));
 
-        if ($data['user_type'] === 'producer') {
-            $user->producers()->create(['user_id' => $user->id]);
-        } elseif ($data['user_type'] === 'artiste') {
-            $user->artistes()->create(['user_id' => $user->id]);
-            Cart::create(['user_id' => $user->id, 'items' => []]);
+        $data = [
+            'device_id' => $request->device_id,
+            'device_name' => $request->device_name,
+            'device_os' => $request->device_os,
+            'device_ip' => $request->device_ip,
+        ];
 
-        }
-        event(new SignUpEvent ($user));
-       
+
+        dispatch(new SignUpJobs($user, $data));
+
         return $this->successResponse('User created successfully', [
             'user' => new UserResources($user)
         ], 201);
     }
-    
+
     public function signin(LoginRequest $request): JsonResponse
     {
 
@@ -79,6 +76,5 @@ class AuthController extends Controller
         Auth::logout();
 
         return $this->successResponse('User logged out successfully');
-        
     }
 }

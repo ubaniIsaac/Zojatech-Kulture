@@ -35,7 +35,7 @@ class SignUpRequest extends FormRequest
             'device_name' => 'nullable|string',
             'device_os' => 'nullable|string',
             'device_ip' => 'nullable|string',
-
-        ];
+            'referred_by' => 'nullable|string',
+        ];  
     }
 }

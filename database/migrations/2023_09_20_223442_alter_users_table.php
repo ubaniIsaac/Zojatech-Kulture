@@ -11,8 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
+
         Schema::table('users', function (Blueprint $table) {
             $table->string('device_id')->nullable();
+            $table->string('referral_code')->nullable();
         });
     }
 
@@ -23,6 +25,7 @@ return new class extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->dropColumn('device_id');
+            $table->dropColumn('referral_code');
         });
     }
 };

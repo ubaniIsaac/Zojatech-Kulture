@@ -2,20 +2,16 @@
 
 namespace App\Http\Controllers\api;
 
-use App\Events\SignUpEvent;
 use Illuminate\Http\Request;
 use App\Traits\ResponseTrait;
-use App\Services\MediaService;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Artisan;
-use App\Models\{Cart, User};
+use App\Models\{User};
 use App\Http\Requests\LoginRequest;
 use App\Http\Controllers\Controller;
-use App\Console\Commands\SignUpCommands;
 use App\Http\Requests\SignUpRequest;
-use Illuminate\Support\Facades\{DB, Auth};
+use Illuminate\Support\Facades\{Auth};
 use Illuminate\Support\Facades\Hash;
-use App\Jobs\{SignUpJobs, SendWelcomeMail};
+use App\Jobs\{SignUpJobs};
 use App\Http\Resources\UserResources;
 
 class AuthController extends Controller
@@ -23,7 +19,7 @@ class AuthController extends Controller
     //
     use ResponseTrait;
     public function register(SignUpRequest $request): JsonResponse
-    {   
+    {
         $user = User::create(array_merge(
             $request->validated(),
             [
@@ -43,6 +39,7 @@ class AuthController extends Controller
             'device_name' => $request->device_name,
             'device_os' => $request->device_os,
             'device_ip' => $request->device_ip,
+            'referred_by' => $request->referred_by,
         ];
 
 

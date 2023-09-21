@@ -33,7 +33,10 @@ class User extends Authenticatable
         'confirm_password',
         'user_type',
         'profile_picture',
-        'device_id'
+        'device_id',
+        'referral_code',
+        // 'subcription_status',
+        // 'subcription_plan',
     ];
 
     /**

@@ -37,10 +37,23 @@ class SignUpJobs implements ShouldQueue
     {
         event(new SignUpEvent($this->user));
 
+        //Seed User into respective tables
+        try {
+            if ($this->user->user_type === 'producer') {
+                $this->user->producers()->create(['user_id' => $this->user->id]);
+            } else if ($this->user->user_type === 'artiste') {
+                $this->user->artistes()->create(['user_id' => $this->user->id]);
+            }
+
+            Log::info('User seeded into respective tables');
+        } catch (\Throwable $th) {
+            Log::error('Error seeding user into respective tables' . $th->getMessage());
+        }
+
         try {
             $referral_details = Referral::create([
                 'referral_code' => ReferralController::genereteReferralCode(),
-                'referred_by' => ReferralController::findReferrer($this->data['referred_by']) ? $this->data['referred_by'] : 'Nil',
+                'referred_by' => ReferralController::findReferrer($this->data['referred_by'], $this->user) ? $this->data['referred_by'] : 'Nil',
                 'user_id' => $this->user->id,
             ]);
             Log::info('Referral details created' . $referral_details);

@@ -3,11 +3,12 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
-use App\Models\{Referral, User};
+use App\Models\{Referral, User, Producer};
 use App\Traits\ResponseTrait;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class ReferralController extends Controller
 {
@@ -21,15 +22,27 @@ class ReferralController extends Controller
         return $code;
     }
 
-    public static function findReferrer(string $referralCode ): bool
+    public static function findReferrer(string $referralCode, User $user): bool
     {
         $referral = Referral::where('referral_code', $referralCode)->first();
 
-        
-
         if ($referral) {
             $referral->referral_count += 1;
-            $referral->save();
+            $referral->save();  
+
+            $producer = Producer::where('user_id', $referral->user_id)->first();
+
+            if(!$producer) {
+                //continue 
+                Log::info('User is not a producer');
+            }
+
+            if ($producer) {
+                $producer->upload_limit += 3;
+                $producer->save();
+                Log::info('Producer upload limit updated');
+            }
+
             return true;
         }
 

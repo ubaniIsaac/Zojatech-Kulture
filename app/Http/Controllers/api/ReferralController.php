@@ -33,7 +33,6 @@ class ReferralController extends Controller
             $producer = Producer::where('user_id', $referral->user_id)->first();
 
             if(!$producer) {
-                //continue 
                 Log::info('User is not a producer');
             }
 

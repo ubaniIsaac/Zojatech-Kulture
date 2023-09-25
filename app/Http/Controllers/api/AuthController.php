@@ -8,13 +8,14 @@ use App\Traits\ResponseTrait;
 use App\Services\MediaService;
 // use Illuminate\Support\Facades\DB;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\DB;
+use App\Models\{User};
 use App\Http\Requests\LoginRequest;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\SignUpRequest;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\{Auth};
 use Illuminate\Support\Facades\Hash;
+use App\Jobs\{SignUpJobs};
 use Illuminate\Support\Facades\Mail;
 use App\Http\Resources\UserResources;
 use App\Http\Requests\passwordResetRequest;
@@ -27,12 +28,6 @@ class AuthController extends Controller
     use ResponseTrait;
     public function register(SignUpRequest $request): JsonResponse
     {
-        $data = $request->all();
-
-        if ($request->hasFile('profile_picture')) {
-            $imageUrl = MediaService::uploadImage($request->file('profile_picture'), 'profileImages');
-        }
-
         $user = User::create(array_merge(
             $request->validated(),
             [
@@ -47,11 +42,16 @@ class AuthController extends Controller
             ]
         ));
 
-        if ($data['user_type'] === 'producer') {
-            $user->producers()->create(['user_id' => $user->id]);
-        } elseif ($data['user_type'] === 'artiste') {
-            $user->artistes()->create(['user_id' => $user->id]);
-            Cart::create(['user_id' => $user->id, 'items' => []]);
+        $data = [
+            'device_id' => $request->device_id,
+            'device_name' => $request->device_name,
+            'device_os' => $request->device_os,
+            'device_ip' => $request->device_ip,
+            'referred_by' => $request->referred_by,
+        ];
+
+
+        dispatch(new SignUpJobs($user, $data));
 
         }
        
@@ -59,7 +59,7 @@ class AuthController extends Controller
             'user' => new UserResources($user)
         ], 201);
     }
-    
+
     public function signin(LoginRequest $request): JsonResponse
     {
 
@@ -127,6 +127,5 @@ class AuthController extends Controller
         Auth::logout();
 
         return $this->successResponse('User logged out successfully');
-        
     }
 }

@@ -11,15 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::dropIfExists('users_devices');
-        Schema::create('users_devices', function (Blueprint $table) {
+        Schema::create('referrals', function (Blueprint $table) {
             $table->id();
-            $table->string('device_id');
-            $table->string('device_name');
-            $table->string('device_os');
-            $table->string('device_ip');
-            $table->foreignUlid('user_id')->constrained()->onDelete('cascade');
+            $table->string('referral_code')->nullable();
+            $table->string('referred_by')->nullable();
+            $table->integer('referral_count')->nullable()->default(0);
             $table->timestamps();
+
+            $table->foreignUlid('user_id')->references('id')->on('users')->cascadeOnDelete();
         });
     }
 
@@ -28,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('user_devices');
+        Schema::dropIfExists('referrals');
     }
 };

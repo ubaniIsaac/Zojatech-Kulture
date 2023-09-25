@@ -32,7 +32,11 @@ class User extends Authenticatable
         'password',
         'confirm_password',
         'user_type',
-        'profile_picture'
+        'profile_picture',
+        'device_id',
+        'referral_code',
+        // 'subcription_status',
+        // 'subcription_plan',
     ];
 
     /**

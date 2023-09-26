@@ -39,11 +39,11 @@ class AuthController extends Controller
         ));
 
         $data = [
-            'device_id' => $request->device_id,
-            'device_name' => $request->device_name,
-            'device_os' => $request->device_os,
-            'device_ip' => $request->device_ip,
-            'referred_by' => $request->referred_by,
+            'device_id' => $request->device_id ?? '',
+            'device_name' => $request->device_name ?? '',
+            'device_os' => $request->device_os ?? '',
+            'device_ip' => $request->device_ip ?? '',
+            'referred_by' => $request->referred_by ?? '',
         ];
 
 

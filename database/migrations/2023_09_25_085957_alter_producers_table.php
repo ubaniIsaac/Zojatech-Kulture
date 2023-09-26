@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('producers', function (Blueprint $table) {
-            $table->string('subscription_status');
-            $table->string('subscription_plan');
+            $table->string('subscription_status')->nullable();
+            $table->string('subscription_plan')->nullable();
             $table->foreignUlid('subscription_id')->nullable()->references('id')->on('subscriptions')->onDelete('cascade');
         });
     }
@@ -23,8 +23,10 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropColumn('subscription_id');
-        Schema::dropColumn('subscription_plan');
-        Schema::dropColumn('subscription_status');
+        Schema::table('producers', function (Blueprint $table) {
+           $table->dropColumn('subscription_id');
+           $table->dropColumn('subscription_plan');
+           $table->dropColumn('subscription_status');
+        });
     }
 };

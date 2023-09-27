@@ -14,11 +14,12 @@ return new class extends Migration
         Schema::table('producers', function (Blueprint $table) {
             $table->string('subscription_status');
             $table->string('subscription_plan');
-            $table->foreignUlid('subscription_id')->nullable()->references('id')->on('subscriptions')->onDelete('cascade');
+            $table->foreignUlid('subscription_id')->references('id')->on('subscriptions')->onDelete('cascade');
         });
     }
 
     /**
+     *
      * Reverse the migrations.
      */
     public function down(): void

@@ -2,7 +2,7 @@
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\api\{ArtisteController, UserController, ProducerController, PaymentController};
-use App\Http\Controllers\api\{SubscriptionController, AuthController, BeatController, Cartcontroller,  FavouriteController, GenreController, };
+use App\Http\Controllers\api\{SubscriptionController, AuthController, BeatController, Cartcontroller,  FavouriteController, GenreController, ReferralController};
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\CheckOwnership;
 
@@ -82,6 +82,12 @@ Route::prefix('v1')->group(function () {
             Route::post('/update', [SubscriptionController::class, 'update'])->name('subcriptions.update');
             Route::post('/delete', [SubscriptionController::class, 'delete'])->name('subcriptions.delete');
         });
+
+        Route::prefix('referral')->group(function (){
+            Route::get('/user/{id}', [ReferralController::class, 'getUserDetails'])->name('referral.getUserDetails');
+            Route::get('/{referral_code}', [ReferralController::class, 'getCodeDetails'])->name('referral.getCodeDetails');
+            Route::get('/', [ReferralController::class, 'index'])->name('referral.index');
+        });
     });
 
 
@@ -122,7 +128,6 @@ Route::prefix('v1')->group(function () {
         //User routes
         Route::prefix('users')->group(function () {
             Route::get('/', [UserController::class, 'index'])->name('get-users');
-
 
             Route::group(['middleware' => 'isOwner:user'], function () {
                 Route::put('/{id}', [UserController::class, 'update'])->name('user-update-self');

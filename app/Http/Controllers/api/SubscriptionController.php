@@ -32,9 +32,15 @@ class SubscriptionController extends Controller
         }
     }
 
-    public function show(Subscription $subscription): JsonResponse
+    public function show(string $id): JsonResponse
     {
-        return $this->successResponse('Subscription retrieved successfully', new SubscriptionResources($subscription));
+        try {
+            $subscription = Subscription::findOrFail($id);
+
+            return $this->successResponse('Subscription retrieved successfully', new SubscriptionResources($subscription));
+        } catch (\Throwable $th) {
+            return $this->okResponse($th->getMessage());
+        }
     }
 
     public function update(CreateSubscription $request, Subscription $subscription): JsonResponse

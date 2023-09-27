@@ -35,8 +35,7 @@ class User extends Authenticatable
         'profile_picture',
         'device_id',
         'referral_code',
-        // 'subcription_status',
-        // 'subcription_plan',
+        
     ];
 
     /**
@@ -87,16 +86,42 @@ class User extends Authenticatable
         return $this->hasOne(Producer::class);
     }
 
+
+    /**
+     * Get the artiste associated with the user.
+     * 
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne<\App\Models\Artiste>
+     */
+
     public function artistes(): HasOne
     {
         return $this->hasOne(Artiste::class);
     }
 
 
+    /**
+     * Get the referral associated with the user.
+     * 
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne<\App\Models\Referral>
+     */
+
+    public function referral_details(): HasOne
+    {
+        return $this->hasOne(Referral::class);
+    }
+
+
+    /**
+     * Get the cart associated with the user.
+     * 
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne<\App\Models\Cart>
+     */
+
     public function cart(): HasOne
     {
         return $this->hasOne(Cart::class);
-    }
+    }   
+
 
     public function savedBeats()
     {

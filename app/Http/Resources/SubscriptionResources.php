@@ -27,14 +27,9 @@ class SubscriptionResources extends JsonResource
                 'description' => $this->description,
                 'upload_limit' => $this->upload_limit,
             ],
+            'subcribers' => $this->users->count(),
 
-            'active_users' => $this->scopeActive(),
-
-            'inactive_users' => $this->scopeInactive(),
-
-            'free_users' => $this->scopeFree(),
-
-            'paid_users' => $this->scopePaid(),
+            'active_user' => $this->users,
 
             
         ];

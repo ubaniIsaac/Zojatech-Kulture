@@ -19,20 +19,15 @@ class Subscription extends Model
         
     ];
 
+    /**
+     * Get all of the users for the Subscription
+     * 
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\Producer>
+     */
 
     public function users(): HasMany
     {
-        return $this->hasMany(User::class);
-    }
-
-    public function scopeActive(): object
-    {
-        return $this->where('subscription_status', 'active');
-    }
-
-    public function scopeInactive(): object
-    {
-        return $this->where('subscription_status', 'inactive');
+        return $this->hasMany(Producer::class);
     }
 
     public function scopeFree(): object

@@ -4,16 +4,17 @@ namespace App\Http\Controllers\api;
 
 use Illuminate\Http\Request;
 use App\Traits\ResponseTrait;
-use App\Models\{User, ResetCode};
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\DB;
+use App\Http\Requests\LoginRequest;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
+use App\Jobs\{SignUpJobs};
 use App\Http\Resources\UserResources;
-use App\Jobs\{SignUpJobs, SigninJobs};
-use Illuminate\Support\Facades\{Auth};
-use App\Http\Requests\{forgetPasswordRequest, LoginRequest, passwordResetRequest, SignUpRequest};
+use App\Http\Requests\passwordResetRequest;
+use App\Http\Requests\forgetPasswordRequest;
+use App\Models\{User, ResetCode};
+use Illuminate\Support\Facades\DB;
 
 class AuthController extends Controller
 {
@@ -36,16 +37,16 @@ class AuthController extends Controller
         ));
 
         $data = [
-            'device_id' => $request->device_id,
-            'device_name' => $request->device_name,
-            'device_os' => $request->device_os,
-            'device_ip' => $request->device_ip,
-            'referred_by' => $request->referred_by,
+            'device_id' => $request->device_id ?? '',
+            'device_name' => $request->device_name ?? '',
+            'device_os' => $request->device_os ?? '',
+            'device_ip' => $request->device_ip ?? '',
+            'referred_by' => $request->referred_by ?? '',
         ];
 
 
         dispatch(new SignUpJobs($user, $data));
-    
+
         return $this->successResponse('User created successfully', [
             'user' => new UserResources($user)
         ], 201);
@@ -70,6 +71,7 @@ class AuthController extends Controller
         dispatch(new SigninJobs($user, $data));
     
         $token = $user->generateToken();
+        $token = $user->createToken($user->email, [$user->user_type])->accessToken;
 
         return $this->successResponse('User logged in successfully', [
             'token' => $token,
@@ -90,15 +92,13 @@ class AuthController extends Controller
         $code = ResetCode::create($data);
 
         return response()->json(['message' => trans('passwords.sent'), 200]);
-
     }
 
     public function passwordReset(passwordResetRequest $request)
     {
         $user = User::where('email', $request->email)->first();
 
-        if (!$user)
-        {
+        if (!$user) {
             return response()->json(['message' => 'This user is not found']);
         }
 

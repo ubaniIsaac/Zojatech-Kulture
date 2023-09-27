@@ -4,15 +4,13 @@ namespace App\Jobs;
 
 use Illuminate\Bus\Queueable;
 use App\Events\SignUpEvent;
-use App\Models\{User, UsersDevices, Referral};
+use App\Models\{Producer, User, Referral};
 use App\Http\Controllers\api\ReferralController;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
+use Illuminate\Support\Facades\{DB, Log};
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Log;
 
 class SignUpJobs implements ShouldQueue
 {
@@ -37,7 +35,7 @@ class SignUpJobs implements ShouldQueue
     {
         event(new SignUpEvent($this->user));
 
-        //Seed User into respective tables
+        //Get and create referral details
         try {
             if ($this->user->user_type === 'producer') {
                 $this->user->producers()->create(['user_id' => $this->user->id]);
@@ -45,33 +43,48 @@ class SignUpJobs implements ShouldQueue
                 $this->user->artistes()->create(['user_id' => $this->user->id]);
             }
 
-            Log::info('User seeded into respective tables');
-        } catch (\Throwable $th) {
-            Log::error('Error seeding user into respective tables' . $th->getMessage());
-        }
-
-        try {
             $referral_details = Referral::create([
                 'referral_code' => ReferralController::genereteReferralCode(),
                 'referred_by' => ReferralController::findReferrer($this->data['referred_by'], $this->user) ? $this->data['referred_by'] : 'Nil',
                 'user_id' => $this->user->id,
             ]);
+
+
+            $subscription = DB::table('subscriptions')->where('plan', 'Free Plan')->first();
+
+            print_r($subscription);
+
+            if ($subscription) {
+                //find user in the producers table
+                $producer = Producer::where('user_id', $this->user->id)->first();
+
+                if ($producer) {
+                    $producer = $producer->update([
+                        'subscription_id' => $subscription->id,
+                        'subscription_status' => 'active',
+                        'subscription_plan' => $subscription->plan,
+                    ]);
+                }
+            }
             Log::info('Referral details created' . $referral_details);
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             Log::error('Error creating referral details' . $e->getMessage());
         }
 
+
+
+        //Update user with referral code and device id
         try {
             $this->user->update([
                 'device_id' => $this->data['device_id'],
                 'referral_code' => $referral_details->referral_code,
             ]);
             Log::info('Device ID to update: ' . $this->data['device_id']);
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             Log::error('Update failed: ' . $e->getMessage());
         }
 
-
+        //Save device details to database
         try {
             DB::table('users_devices')->insert([
                 'user_id' => $this->user->id,
@@ -83,7 +96,7 @@ class SignUpJobs implements ShouldQueue
                 'updated_at' => now(),
             ]);
             Log::info('Saving device details to database');
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             Log::error('Error saving user device details to DB' . $e->getMessage());
         }
     }

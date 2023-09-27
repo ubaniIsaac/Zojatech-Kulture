@@ -139,8 +139,8 @@
                                                                             Hey {{$user->username}},
                                                                             <p> Security Alert!!!</p>
                                                                             <p>We detected a login from a different device on your account</p>
-                                                                            <p>The following details:</p>
-                                                                            <p>device id: {{$id}}</p>
+                                                                            {{-- <p>The following details:</p> --}}
+                                                                            {{-- <p>device id: {{$id}}</p> --}}
                                                                             {{-- <p>device name: {{$data['device_name']}}</p>   
                                                                             <p>device os: {{$data['device_os']}}</p>
                                                                             <p>device ip: {{$data['device_ip']}}</p>                    --}}

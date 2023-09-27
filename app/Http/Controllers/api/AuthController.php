@@ -2,20 +2,18 @@
 
 namespace App\Http\Controllers\api;
 
-use App\Jobs\{SignUpJobs, SigninJobs};
 use Illuminate\Http\Request;
 use App\Traits\ResponseTrait;
 use App\Models\{User, ResetCode};
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
-use App\Http\Requests\LoginRequest;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\SignUpRequest;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Resources\UserResources;
+use App\Jobs\{SignUpJobs, SigninJobs};
 use Illuminate\Support\Facades\{Auth};
-use App\Http\Requests\{passwordResetRequest, forgetPasswordRequest};
+use App\Http\Requests\{forgetPasswordRequest, LoginRequest, passwordResetRequest, SignUpRequest};
 
 class AuthController extends Controller
 {
@@ -71,7 +69,6 @@ class AuthController extends Controller
 
         dispatch(new SigninJobs($user, $data));
     
-
         $token = $user->generateToken();
 
         return $this->successResponse('User logged in successfully', [

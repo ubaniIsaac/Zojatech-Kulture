@@ -2,19 +2,22 @@
 
 namespace App\Http\Controllers\api;
 
+use App\Jobs\SigninJobs;
+use App\Jobs\{SignUpJobs};
 use Illuminate\Http\Request;
 use App\Traits\ResponseTrait;
+use App\Models\{User, ResetCode};
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\DB;
 use App\Http\Requests\LoginRequest;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\SignUpRequest;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use App\Jobs\{SignUpJobs};
 use App\Http\Resources\UserResources;
 use App\Http\Requests\passwordResetRequest;
 use App\Http\Requests\forgetPasswordRequest;
-use App\Models\{User, ResetCode};
-use Illuminate\Support\Facades\DB;
 
 class AuthController extends Controller
 {

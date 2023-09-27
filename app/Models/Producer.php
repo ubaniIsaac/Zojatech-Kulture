@@ -17,7 +17,9 @@ class Producer extends User
      */
     protected $guarded = [];
 
-    protected $fillable = [];
+    protected $fillable = [
+        'subscription_id'
+    ];
 
     /**
      * Get the user that owns the producer.

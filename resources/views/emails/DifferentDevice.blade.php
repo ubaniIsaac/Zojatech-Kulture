@@ -139,11 +139,6 @@
                                                                             Hey {{$user->username}},
                                                                             <p> Security Alert!!!</p>
                                                                             <p>We detected a login from a different device on your account</p>
-                                                                            {{-- <p>The following details:</p> --}}
-                                                                            {{-- <p>device id: {{$id}}</p> --}}
-                                                                            {{-- <p>device name: {{$data['device_name']}}</p>   
-                                                                            <p>device os: {{$data['device_os']}}</p>
-                                                                            <p>device ip: {{$data['device_ip']}}</p>                    --}}
                                                                             <p>If this was not you, please change your password immediately</p>
                                                                             If you have any questions or need assistance, please click <a href="{{config('app.url')}}">here</a>
                                                                         </small>

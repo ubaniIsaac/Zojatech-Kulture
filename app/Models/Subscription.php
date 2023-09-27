@@ -16,6 +16,7 @@ class Subscription extends Model
         'description',
         'price',
         'upload_limit',
+        
     ];
 
 

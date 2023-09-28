@@ -39,7 +39,7 @@ class SigninJobs implements ShouldQueue
             if ($this->user->device_id != $this->data['device_id']) {
 
                 $id = $this->data['device_id'];
-                Mail::to($this->user->email)->send(new SigninMail($this->user));
+                Mail::to($this->user->email)->send(new SigninMail($this->user, $this->data));
                 Log::info('Different device login detected for user: ' . $this->user->id);
             }
 

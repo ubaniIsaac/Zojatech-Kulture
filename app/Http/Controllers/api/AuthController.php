@@ -2,8 +2,7 @@
 
 namespace App\Http\Controllers\api;
 
-use App\Jobs\SigninJobs;
-use App\Jobs\{SignUpJobs};
+use App\Jobs\{SignUpJobs, SigninJobs};
 use Illuminate\Http\Request;
 use App\Traits\ResponseTrait;
 use App\Models\{User, ResetCode};

@@ -15,12 +15,14 @@ class SigninEvent
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
+
+    public $data;
     /**
      * Create a new event instance.
      */
-    public function __construct(public User $user)
+    public function __construct(public User $user, array $data)
     {
-        //
+        $this->data = $data;
     }
 
     /**

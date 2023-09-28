@@ -25,7 +25,7 @@ class SigninListener
     public function handle(SigninEvent $event): void
     {
         //
-        Mail::to($event->user->email)->send(new SigninMail($event->user));
+        Mail::to($event->user->email)->send(new SigninMail($event->user, $event->data));
         
 
     }

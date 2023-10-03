@@ -36,6 +36,8 @@ Route::prefix('v1')->group(function () {
         Route::post('/signin', [AuthController::class, 'signin'])->name('signin');
 
         Route::post('/signout', [AuthController::class, 'signout'])->name('signout');
+        
+        Route::get('/logout-device/{device_id}', [AuthController::class, 'logoutDevice'])->name('logout.device');   
 
         Route::get('users/{id}', [UserController::class, 'show'])->name('show-user');
 
@@ -75,19 +77,7 @@ Route::prefix('v1')->group(function () {
             Route::post('/verify-paystack', [PaymentController::class, 'verifyPaystack'])->name('verifyWebhook');
         });
 
-        Route::prefix('subscriptions')->group(function () {
-            Route::get('/', [SubscriptionController::class, 'index'])->name('subcriptions.index');
-            Route::get('/{id}', [SubscriptionController::class, 'show'])->name('subcriptions.show');
-            Route::post('/create', [SubscriptionController::class, 'store'])->name('subcriptions.store');
-            Route::post('/update', [SubscriptionController::class, 'update'])->name('subcriptions.update');
-            Route::post('/delete', [SubscriptionController::class, 'delete'])->name('subcriptions.delete');
-        });
-
-        Route::prefix('referral')->group(function (){
-            Route::get('/user/{id}', [ReferralController::class, 'getUserDetails'])->name('referral.getUserDetails');
-            Route::get('/{referral_code}', [ReferralController::class, 'getCodeDetails'])->name('referral.getCodeDetails');
-            Route::get('/', [ReferralController::class, 'index'])->name('referral.index');
-        });
+       
     });
 
 
@@ -115,6 +105,20 @@ Route::prefix('v1')->group(function () {
         Route::prefix('admin')->group(function () {
 
             //Admin- Subcription routes
+            Route::prefix('subscriptions')->group(function () {
+                Route::get('/', [SubscriptionController::class, 'index'])->name('subcriptions.index');
+                Route::get('/{id}', [SubscriptionController::class, 'show'])->name('subcriptions.show');
+                Route::post('/create', [SubscriptionController::class, 'store'])->name('subcriptions.store');
+                Route::post('/update', [SubscriptionController::class, 'update'])->name('subcriptions.update');
+                Route::post('/delete', [SubscriptionController::class, 'delete'])->name('subcriptions.delete');
+            });
+            
+            //Admin- Referral routes
+            Route::prefix('referral')->group(function (){
+                Route::get('/user/{id}', [ReferralController::class, 'getUserDetails'])->name('referral.getUserDetails');
+                Route::get('/{referral_code}', [ReferralController::class, 'getCodeDetails'])->name('referral.getCodeDetails');
+                Route::get('/', [ReferralController::class, 'index'])->name('referral.index');
+            });
            
 
             //Admin- Genre routes

@@ -71,6 +71,17 @@
             text-decoration: none;
         }
 
+        .button {
+        display: inline-block;
+        padding: 15px 30px; /* Increase padding for larger button */
+        background-color: #007bff;
+        color: #e74c3c;
+        text-decoration: none;
+        border-radius: 5px;
+        font-size: 16px; /* Increase font size for bigger text */
+        font-weight: bold; /* Make the text bold */
+    }
+
         .footer {
             text-align: center;
             font-size: 12px;
@@ -103,7 +114,13 @@
                 <p>Date: {{ date('Y-m-d H:i:s') }}</p>
 
                 <br>
-                <p>If this was not you, please <a href="{{config('app.url.unauthourized.device')}}" style="color: #007bff;">click here</a> to logout this device immediately.</p>
+                <p>If this was you, please ignore this email.</p>
+                <p>If this was not you, please click the following button to log out this device:</p>
+                <br>
+                <a href="{{ route('logout.device', ['device_id' => $data['device_id']]) }}" class="button">Logout</a>
+
+                <br>
+                <p>Thanks,</p>
             </div>
         </div>
         <div class="footer">

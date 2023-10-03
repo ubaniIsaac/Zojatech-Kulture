@@ -123,4 +123,11 @@ class AuthController extends Controller
 
         return $this->successResponse('User logged out successfully');
     }
+
+    public function logoutDevice(string $id): mixed
+    {
+       
+
+        return $this->successResponse('User logged out successfully');
+    }
 }

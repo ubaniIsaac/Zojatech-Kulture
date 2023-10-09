@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use App\Http\Controllers\api\{ArtisteController, UserController, ProducerController, PaymentController};
 use App\Http\Controllers\api\{SubscriptionController, AuthController, BeatController, Cartcontroller,  FavouriteController, GenreController, ReferralController};
+use App\Http\Controllers\api\{FlagController, SaveForLaterController};
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\CheckOwnership;
 
@@ -36,8 +37,8 @@ Route::prefix('v1')->group(function () {
         Route::post('/signin', [AuthController::class, 'signin'])->name('signin');
 
         Route::post('/signout', [AuthController::class, 'signout'])->name('signout');
-        
-        Route::get('/logout-device/{device_id}', [AuthController::class, 'logoutDevice'])->name('logout.device');   
+
+        Route::get('/logout-device/{device_id}', [AuthController::class, 'logoutDevice'])->name('logout.device');
 
         Route::get('users/{id}', [UserController::class, 'show'])->name('show-user');
 
@@ -77,7 +78,8 @@ Route::prefix('v1')->group(function () {
             Route::post('/verify-paystack', [PaymentController::class, 'verifyPaystack'])->name('verifyWebhook');
         });
 
-       
+
+        
     });
 
 
@@ -101,6 +103,11 @@ Route::prefix('v1')->group(function () {
         Route::post('/payment/withdraw',  [PaymentController::class, 'initiateWithdrawal'])->middleware(['role:producer'])->name('initiatewithdrawal');
 
 
+        Route::prefix('flag')->group(function () {
+            Route::post('/beat', [FlagController::class, 'flagBeat'])->name('flagBeat');
+            Route::post('/producer/{producer_id}', [FlagController::class, 'flagProducer'])->name('flagProducer');
+        });
+
         //Admin routes
         Route::prefix('admin')->group(function () {
 
@@ -112,14 +119,14 @@ Route::prefix('v1')->group(function () {
                 Route::post('/update', [SubscriptionController::class, 'update'])->name('subcriptions.update');
                 Route::post('/delete', [SubscriptionController::class, 'delete'])->name('subcriptions.delete');
             });
-            
+
             //Admin- Referral routes
-            Route::prefix('referral')->group(function (){
+            Route::prefix('referral')->group(function () {
                 Route::get('/user/{id}', [ReferralController::class, 'getUserDetails'])->name('referral.getUserDetails');
                 Route::get('/{referral_code}', [ReferralController::class, 'getCodeDetails'])->name('referral.getCodeDetails');
                 Route::get('/', [ReferralController::class, 'index'])->name('referral.index');
             });
-           
+
 
             //Admin- Genre routes
             Route::prefix('genre')->group(function () {

@@ -14,12 +14,17 @@ return new class extends Migration
         Schema::create('flags', function (Blueprint $table) {
             $table->ulid('id')->primary()->uniqid();
             $table->string('reason');
+            $table->string('description');
+            $table->string('status');
+            $table->string('type');
+            $table->string('approved_by')->nullable();
+            $table->timestamps();
 
-            $table->foreginUlid('id');
+            // Foreign keys
+            $table->foreign('approved_by')->references('id')->on('users')->cascadeOnDelete();
+            $table->foreignUlid('beat_id')->references('id')->on('beats')->cascadeOnDelete();
             $table->foreignUlid('user_id')->references('id')->on('users')->cascadeOnDelete();
             $table->foreignUlid('producer_id')->references('id')->on('producers')->cascadeOnDelete();
-
-            $table->timestamps();
         });
     }
 

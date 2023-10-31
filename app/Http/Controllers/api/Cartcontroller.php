@@ -16,12 +16,17 @@ class Cartcontroller extends Controller
     public function add(Request $request): JsonResponse
     {
         $beat = Beat::findOrFail($request->beat_id);
+        if($beat->available_copies ==0){
+            return response()->json([
+                'message' => 'no available copies' ,
+            ], 409);
+        }
         $cart = Cart::where('user_id', auth()->user()->id)->first();
 
         if(!$cart) {     
             $cart = Cart::create(['user_id' => auth()->user()->id, 'items' => []]);
         }
-
+        
         if (in_array($beat->id, $cart->items)) {
             return response()->json(
                 [

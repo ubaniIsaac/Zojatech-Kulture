@@ -10,11 +10,18 @@
 | need to change it using the "uses()" function to bind a different classes or traits.
 |
 */
+use App\Models\User;
 
-uses(
-    Tests\TestCase::class,
-    // Illuminate\Foundation\Testing\RefreshDatabase::class,
-)->in('Feature');
+use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Artisan;
+use Laravel\Passport\Passport;
+
+uses(Tests\TestCase::class, RefreshDatabase::class)->in('Feature');
+uses(Tests\TestCase::class)->in('Unit');
+uses()->beforeEach(function () {
+    Artisan::call('passport:install');
+})->in('Feature');
 
 /*
 |--------------------------------------------------------------------------
@@ -42,7 +49,11 @@ expect()->extend('toBeOne', function () {
 |
 */
 
-function something()
+
+function actingAs(User $user = null): Authenticatable
 {
-    // ..
+    return Passport::actingAs(
+        $user ?: User::factory()->create()
+    );
 }
+

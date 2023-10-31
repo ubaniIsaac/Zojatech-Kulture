@@ -2,19 +2,21 @@
 
 namespace App\Http\Controllers\api;
 
-use App\Events\SignUpEvent;
-use App\Models\Artiste;
+use App\Jobs\{SignUpJobs, SigninJobs};
 use Illuminate\Http\Request;
 use App\Traits\ResponseTrait;
-use App\Services\MediaService;
+use App\Models\{User, ResetCode};
 use Illuminate\Http\JsonResponse;
-use App\Models\{Cart, User, Producer, };
+use Illuminate\Support\Facades\DB;
 use App\Http\Requests\LoginRequest;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\SignUpRequest;
-use Illuminate\Support\Facades\{DB, Auth};
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Resources\UserResources;
+use App\Http\Requests\passwordResetRequest;
+use App\Http\Requests\forgetPasswordRequest;
 
 class AuthController extends Controller
 {
@@ -22,12 +24,6 @@ class AuthController extends Controller
     use ResponseTrait;
     public function register(SignUpRequest $request): JsonResponse
     {
-        $data = $request->all();
-
-        if ($request->hasFile('profile_picture')) {
-            $imageUrl = MediaService::uploadImage($request->file('profile_picture'), 'profileImages');
-        }
-
         $user = User::create(array_merge(
             $request->validated(),
             [
@@ -42,20 +38,22 @@ class AuthController extends Controller
             ]
         ));
 
-        if ($data['user_type'] === 'producer') {
-            $user->producers()->create(['user_id' => $user->id]);
-        } elseif ($data['user_type'] === 'artiste') {
-            $user->artistes()->create(['user_id' => $user->id]);
-            Cart::create(['user_id' => $user->id, 'items' => []]);
+        $data = [
+            'device_id' => $request->device_id ?? '',
+            'device_name' => $request->device_name ?? '',
+            'device_os' => $request->device_os ?? '',
+            'device_ip' => $request->device_ip ?? '',
+            'referred_by' => $request->referred_by ?? '',
+        ];
 
-        }
-        event(new SignUpEvent ($user));
-       
+
+        dispatch(new SignUpJobs($user, $data));
+
         return $this->successResponse('User created successfully', [
             'user' => new UserResources($user)
         ], 201);
     }
-    
+
     public function signin(LoginRequest $request): JsonResponse
     {
 
@@ -65,6 +63,15 @@ class AuthController extends Controller
             return $this->errorResponse('Invalid credentials', 401);
         }
 
+        $data = [
+            'device_id' => $request->device_id ?? '',
+            'device_name' => $request->device_name ?? '',
+            'device_os' => $request->device_os ?? '',
+            'device_ip' => $request->device_ip ?? '',
+        ];
+
+        dispatch(new SigninJobs($user, $data));
+    
         $token = $user->generateToken();
         $token = $user->createToken($user->email, [$user->user_type])->accessToken;
 
@@ -74,11 +81,53 @@ class AuthController extends Controller
         ]);
     }
 
+    public function forgotPassword(forgetPasswordRequest $request)
+    {
+        ResetCode::where('email', $request->email)->delete();
+
+        // Generate random code
+
+        $data['email'] = $request->email;
+        $data['Token'] = rand(000, 999);
+        $data['created'] = now();
+
+        $code = ResetCode::create($data);
+
+        return response()->json(['message' => trans('passwords.sent'), 200]);
+    }
+
+    public function passwordReset(passwordResetRequest $request)
+    {
+        $user = User::where('email', $request->email)->first();
+
+        if (!$user) {
+            return response()->json(['message' => 'This user is not found']);
+        }
+
+        $user->fill([
+            'password' => Hash::make($request->password)
+        ]);
+        $user->save();
+
+        DB::table('resetcodepassword')->where('email', $user->email)->delete();
+
+        return response()->json([
+            'message' => 'Password reset successful',
+            'data' => $user
+        ]);
+    }
+
     public function signout(Request $request): JsonResponse
     {
         Auth::logout();
 
         return $this->successResponse('User logged out successfully');
-        
+    }
+
+    public function logoutDevice(string $id): mixed
+    {
+       
+
+        return $this->successResponse('User logged out successfully');
     }
 }

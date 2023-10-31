@@ -30,7 +30,12 @@ class SignUpRequest extends FormRequest
             'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'password' => 'required|string|min:8|same:confirm_password',
             'confirm_password' => 'required|string|min:8',
-            'user_type' => 'required|string|in:producer,artiste'
-        ];
+            'user_type' => 'required|string|in:producer,artiste',
+            'device_id' => 'nullable|string',
+            'device_name' => 'nullable|string',
+            'device_os' => 'nullable|string',
+            'device_ip' => 'nullable|string',
+            'referred_by' => 'nullable|string',
+        ];  
     }
 }

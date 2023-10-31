@@ -1,7 +1,9 @@
 <?php
 
 use Illuminate\Http\Request;
-use App\Http\Controllers\api\{ArtisteController, AuthController, BeatController, Cartcontroller, FavouriteController, GenreController, UserController, ProducerController, LicenseController, PaymentController};
+use App\Http\Controllers\api\{ArtisteController, UserController, ProducerController, PaymentController};
+use App\Http\Controllers\api\{SubscriptionController, AuthController, BeatController, Cartcontroller,  FavouriteController, GenreController, ReferralController};
+use App\Http\Controllers\api\{FlagController, SaveForLaterController};
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\CheckOwnership;
 
@@ -36,20 +38,25 @@ Route::prefix('v1')->group(function () {
 
         Route::post('/signout', [AuthController::class, 'signout'])->name('signout');
 
-        Route::get('/genre', [GenreController::class, 'index'])->name('genre.index');
-
-        Route::get('/genre/{id}', [GenreController::class, 'show'])->name('genre.show');
-
+        Route::get('/logout-device/{device_id}', [AuthController::class, 'logoutDevice'])->name('logout.device');
 
         Route::get('users/{id}', [UserController::class, 'show'])->name('show-user');
 
-        Route::get('/producers', [ProducerController::class, 'index'])->name('producers.index');
 
-        Route::get('/producers/{id}', [ProducerController::class, 'show'])->name('producers.show');
+        Route::prefix('genres')->group(function () {
+            Route::get('/genre', [GenreController::class, 'index'])->name('genre.index');
+            Route::get('/genre/{id}', [GenreController::class, 'show'])->name('genre.show');
+        });
 
-        Route::get('/artistes', [ArtisteController::class, 'index'])->name('artistess.index');
+        Route::prefix('producers')->group(function () {
+            Route::get('/', [ProducerController::class, 'index'])->name('producers.index');
+            Route::get('/{id}', [ProducerController::class, 'show'])->name('producers.show');
+        });
 
-        Route::get('/artistes/{id}', [ArtisteController::class, 'show'])->name('artistes.show');
+        Route::prefix('artistes')->group(function () {
+            Route::get('/', [ArtisteController::class, 'index'])->name('artistess.index');
+            Route::get('/{id}', [ArtisteController::class, 'show'])->name('artistes.show');
+        });
 
         Route::get('/verifyPayment', [PaymentController::class, 'verifyPayment'])->name('verifyTransaction');
 
@@ -67,10 +74,12 @@ Route::prefix('v1')->group(function () {
             Route::post('/{beat}/save-for-later', [SaveForLaterController::class, 'saveBeatForLater'])->name('beats.save-for-later');
         });
 
-
         Route::prefix('webhook')->group(function () {
             Route::post('/verify-paystack', [PaymentController::class, 'verifyPaystack'])->name('verifyWebhook');
         });
+
+
+        
     });
 
 
@@ -94,14 +103,30 @@ Route::prefix('v1')->group(function () {
         Route::post('/payment/withdraw',  [PaymentController::class, 'initiateWithdrawal'])->middleware(['role:producer'])->name('initiatewithdrawal');
 
 
+        Route::prefix('flag')->group(function () {
+            Route::post('/beat', [FlagController::class, 'flagBeat'])->name('flagBeat');
+            Route::post('/producer/{producer_id}', [FlagController::class, 'flagProducer'])->name('flagProducer');
+        });
+
         //Admin routes
         Route::prefix('admin')->group(function () {
 
-            Route::prefix('license')->group(function () {
-                Route::get('/', [LicenseController::class, 'index'])->name('license.index');
-                // Route::get('/{id}', [LicenseController::class, 'show'])->name('license.show');
-                Route::post('/create', [LicenseController::class, 'store'])->name('license.store');
+            //Admin- Subcription routes
+            Route::prefix('subscriptions')->group(function () {
+                Route::get('/', [SubscriptionController::class, 'index'])->name('subcriptions.index');
+                Route::get('/{id}', [SubscriptionController::class, 'show'])->name('subcriptions.show');
+                Route::post('/create', [SubscriptionController::class, 'store'])->name('subcriptions.store');
+                Route::post('/update', [SubscriptionController::class, 'update'])->name('subcriptions.update');
+                Route::post('/delete', [SubscriptionController::class, 'delete'])->name('subcriptions.delete');
             });
+
+            //Admin- Referral routes
+            Route::prefix('referral')->group(function () {
+                Route::get('/user/{id}', [ReferralController::class, 'getUserDetails'])->name('referral.getUserDetails');
+                Route::get('/{referral_code}', [ReferralController::class, 'getCodeDetails'])->name('referral.getCodeDetails');
+                Route::get('/', [ReferralController::class, 'index'])->name('referral.index');
+            });
+
 
             //Admin- Genre routes
             Route::prefix('genre')->group(function () {
@@ -114,7 +139,6 @@ Route::prefix('v1')->group(function () {
         //User routes
         Route::prefix('users')->group(function () {
             Route::get('/', [UserController::class, 'index'])->name('get-users');
-
 
             Route::group(['middleware' => 'isOwner:user'], function () {
                 Route::put('/{id}', [UserController::class, 'update'])->name('user-update-self');

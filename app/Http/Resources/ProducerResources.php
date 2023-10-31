@@ -34,6 +34,7 @@ class ProducerResources extends JsonResource
             ],
             'beats_liked_by_artistes' => $this->likedBeats,
             'uploaded_beats' => $this->beats,
+            'subscription' => $this->subscription_plan,
             
 
         ];

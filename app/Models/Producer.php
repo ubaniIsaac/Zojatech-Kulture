@@ -17,7 +17,11 @@ class Producer extends User
      */
     protected $guarded = [];
 
-    protected $fillable = [];
+    protected $fillable = [
+        'subscription_plan',
+        'subscription_status',
+        'subscription_id',
+    ];
 
     /**
      * Get the user that owns the producer.
@@ -49,7 +53,18 @@ class Producer extends User
     public function likedBeats(): HasMany
     {
         return $this->hasMany(Beat::class)
-            ->whereHas('favourites'); 
+            ->whereHas('favourites');
     }
 
+
+    /**
+     * Get the subscription plan for the producer.
+     * 
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\Subscription>
+     */
+
+    public function subscription_plan(): BelongsTo
+    {
+        return $this->belongsTo(Subscription::class);
+    }
 }
